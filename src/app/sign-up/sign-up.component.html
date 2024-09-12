@@ -1,0 +1,115 @@
+<div class="container-fluid bg-primary px-0 px-md-5 mb-5">
+    <div class="row align-items-center px-3">
+        <div class="col-lg-4 text-center text-lg-left" style="margin-right: 15%;">
+            <h1 class="display-3 font-weight-bold text-white">SignUp</h1>
+            <form [formGroup]="signUpForm">
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);" for="exampleInputPassword1">First Name</label>
+                    <input formControlName="firstName" type="text" class="form-control" placeholder="first Name">
+                </div>
+                <div *ngIf="
+                  signUpForm.controls['firstName'].invalid &&
+                  (signUpForm.controls['firstName'].touched || 
+                  signUpForm.controls['firstName'].dirty)">
+                    <div *ngIf="signUpForm.controls['firstName'].errors?.['required']">
+                        First Name is required
+                    </div>
+                    <div *ngIf="signUpForm.controls['firstName'].errors?.['minlength']">
+                        First Name must have at least 3 chars
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);" for="exampleInputPassword1">Last Name</label>
+                    <input formControlName="lastName" type="text" class="form-control" placeholder="Last Name">
+                </div>
+                <div *ngIf="
+      signUpForm.controls['lastName'].invalid &&
+      (signUpForm.controls['lastName'].touched || 
+      signUpForm.controls['lastName'].dirty)">
+                    <div *ngIf="signUpForm.controls['lastName'].errors?.['required']">
+                        Last Name is required
+                    </div>
+                    <div *ngIf="signUpForm.controls['lastName'].errors?.['minlength']">
+                        Last Name must have at least 5 chars
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);" for="exampleInputPassword1">age</label>
+                    <input formControlName="age" type="number" class="form-control" placeholder="age">
+                </div>
+                <div *ngIf="
+                  signUpForm.controls['age'].invalid &&
+                  (signUpForm.controls['age'].touched || 
+                  signUpForm.controls['age'].dirty)">
+                    <div *ngIf="signUpForm.controls['age'].errors?.['required']">
+                        age is required
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);" for="exampleInputEmail1">address</label>
+                    <input formControlName="address" type="text" class="form-control" placeholder="address">
+                </div>
+                <div *ngIf="
+                  signUpForm.controls['address'].invalid &&
+                  (signUpForm.controls['address'].touched || 
+                  signUpForm.controls['address'].dirty)">
+                    <div *ngIf="signUpForm.controls['address'].errors?.['required']">
+                        address is required
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);">email</label>
+                    <input formControlName="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="email">
+                </div>
+                <div *ngIf="
+                  signUpForm.controls['email'].invalid &&
+                  (signUpForm.controls['email'].touched || 
+                  signUpForm.controls['email'].dirty)">
+                    <div *ngIf="signUpForm.controls['email'].errors?.['required']">
+                        Email is required
+                    </div>
+                    <div *ngIf="signUpForm.controls['email'].errors?.['email']">
+                        Form Email invalid
+                    </div>
+                </div>
+
+
+                <label style="color: rgb(52, 48, 48);font-size: small; " id="emailHelp" class=" ">We'll never
+          share
+          your
+          email with anyone else.</label>
+
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);">Password</label>
+                    <input formControlName="pwd" type="password" class="form-control" placeholder="password">
+                </div>
+                <div *ngIf="
+                  signUpForm.controls['pwd'].invalid &&
+                  (signUpForm.controls['pwd'].touched || 
+                  signUpForm.controls['pwd'].dirty)">
+                    <div *ngIf="signUpForm.controls['pwd'].errors?.['required']">
+                        pwd is required
+                    </div>
+                    <div *ngIf="signUpForm.controls['pwd'].errors?.['minlength']">
+                        pwd must have at least 6
+                    </div>
+                    <div *ngIf="signUpForm.controls['pwd'].errors?.['maxlength']">
+                        pwd must have at least 7
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="button" (click)='filePicker.click()' class="btn btn-success">Sélectionner image</button>
+                    <div class="form-group">
+                        <input style="visibility: hidden;" type="file" class="form-control" #filePicker (change)='onImageSelected($event)' />
+                    </div>
+                    <img [src]="imagePreview">
+                    <button type="submit" (click)="signUp()" [disabled]="signUpForm.invalid" class="btn btn-secondary">SignUp</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-6 text-center text-lg-right">
+            <img class="img-fluid mt-5" src="assets/img/header.png" alt="">
+        </div>
+    </div>
+</div>

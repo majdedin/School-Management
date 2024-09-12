@@ -1,0 +1,21 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">speciality</th>
+        <th scope="col">experience</th>
+        <th scope="col">action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let elt of T">
+       
+        <td>{{elt._id}}</td>
+        <td>{{elt.name}}</td>
+        <td>{{elt.speciality}}</td>
+        <td>{{elt.experience}}</td>
+        <td><button style="margin-right: 2%;" type="button" class="btn btn-success" (click)="display(elt._id)">display</button> <button type="button" class="btn btn-danger" (click)="goToEdit(elt._id)">edit</button><button type="button" class="btn btn-danger" (click)="delete(elt._id)">delete</button></td>
+      </tr>
+    </tbody>
+  </table>

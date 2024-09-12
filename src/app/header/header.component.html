@@ -1,0 +1,38 @@
+<div class="container-fluid bg-light position-relative shadow">
+    <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0 px-lg-5">
+        <a href="" class="navbar-brand font-weight-bold text-secondary" style="font-size: 50px;">
+            <i class="flaticon-043-teddy-bear"></i>
+            <span class="text-primary">KidKinder</span>
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="navbar-nav font-weight-bold mx-auto py-0">
+                <li class="nav-item nav-link"><a routerLink="Home">Home</a></li>
+                <li class="nav-item nav-link"> <a href="about.html">About</a></li>
+                <li *ngIf="user?.role==='user'" class="nav-item nav-link"> <a routerLink="classes">Classes</a></li>
+                <li *ngIf="user?.role==='user'" class="nav-item nav-link"><a routerLink="teachers">Teachers</a></li>
+                <li *ngIf="user?.role==='user'" class="nav-item nav-link"><a routerLink="courses">courses</a></li>
+                <div class="nav-item dropdown">
+                    <a   *ngIf="!isLoggedIn()"href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">dashboard</a>
+                    <div class="dropdown-menu rounded-0 m-0" *ngIf="!isLoggedIn()">
+                        <a class="dropdown-item" routerLink="add-course">add course</a>
+                        <a class="dropdown-item" routerLink="add-teacher">add teacher</a>
+                        <a  class="dropdown-item" routerLink="admin">admin</a>
+                    </div>
+                </div>
+                
+                
+                <li class="nav-item nav-link"> <a routerLink="Universities">Universities</a></li>
+                <li class="nav-item nav-link"> <a routerLink="searchCourse">search course</a></li>
+                <li class="nav-item nav-link"> <a href="contact.html">Contact</a></li>
+                <li *ngIf="!isLoggedIn()" class="nav-item nav-link"><a routerLink="SignUp" >Signup</a></li>
+                <li *ngIf="!isLoggedIn()" class="nav-item nav-link"><a routerLink="Login">Login</a></li>
+                <li *ngIf="!!isLoggedIn()" class="nav-item nav-link"> <h2>welcome {{user.firstName}}</h2></li>
+                <li *ngIf="!isLoggedIn()" class="nav-item nav-link"> <a routerLink="home" (click)="logout ()"></a>Logout</li>
+            </div>
+            <a *ngIf="!user" href="" class="btn btn-primary px-4">Join Class</a>
+        </div>
+    </nav>
+</div>

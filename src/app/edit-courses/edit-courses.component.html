@@ -1,0 +1,36 @@
+<div class="site-section" style="margin-top: 5%;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <form #coursesForm="ngForm" (ngSubmit)="editCourse">
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="course.title" [ngModelOptions]="{standalone:true}"
+                            class="form-control" placeholder="title">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="course.price" [ngModelOptions]="{standalone:true}"
+                            class="form-control" placeholder="price">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="course.duration" [ngModelOptions]="{standalone:true}"
+                            class="form-control" placeholder="duration">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="course.totalSeats" [ngModelOptions]="{standalone:true}"
+                            class="form-control" placeholder="totalSeats">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="course.ageOfKids" [ngModelOptions]="{standalone:true}"
+                            class="form-control" placeholder="ageOfKids">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary py-3 px-5" (click)="editCourse()">edit Course</button> 
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

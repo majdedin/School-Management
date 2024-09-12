@@ -1,0 +1,23 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">Title</th>
+        <th scope="col">price</th>
+        <th scope="col">duration</th>
+        <th scope="col">totalSeats</th>
+        <th scope="col">ageOfKids</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let elt of T">
+       <td>{{elt._id}}</td>
+        <td>{{elt.title}}</td>
+        <td>{{elt.price}}</td>
+        <td>{{elt.duration}}</td>
+        <td>{{elt.totalSeats}}</td>
+        <td>{{elt.ageOfKids}}</td>
+        <td><button style="margin-right: 2%;" type="button" class="btn btn-success" (click)="goToInfo(elt._id)">display</button> <button type="button" class="btn btn-danger" (click)="goToEdit(elt._id)">edit</button><button style="margin-right: 2%;" type="button" class="btn btn-danger" (click)="delete(elt._id)">delete</button></td>
+      </tr>
+    </tbody>
+  </table>
