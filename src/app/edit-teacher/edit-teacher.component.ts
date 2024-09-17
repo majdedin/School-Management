@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeachersService } from '../services/teachers.service';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-teacher',
@@ -10,27 +9,29 @@ import { FormGroup } from '@angular/forms';
 })
 export class EditTeacherComponent implements OnInit {
   teacher: any = {};
-  teachersForm!: FormGroup;
-  id: any;
+  specialities: string[] = ['networking', 'development', 'project management'];
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private teachersService: TeachersService,
-    private router: Router
-  ) { }
+  constructor(private teachersService: TeachersService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.params['id'];
-    this.teachersService.getteacherById(this.id).subscribe((data) => {
-      this.teacher = data.teacher
-    });
-  }
-  editTeacher(): void {
-    this.teachersService.editteacher(this.teacher).subscribe((data) => {
-      console.log('this response from BE', data.isEdited);
-      this.router.navigate(['admin']);
-    });
-
+    const teacherId = this.route.snapshot.paramMap.get('id');
+    if (teacherId) {
+      this.loadTeacher(teacherId);
+    }
   }
 
+  loadTeacher(id: string) {
+    this.teachersService.getteacherById(id).subscribe((response) => {
+      this.teacher = response.teacher;
+    });
+  }
+
+  editTeacher() {
+    this.teachersService.editteacher(this.teacher).subscribe(() => {
+      this.router.navigate(['/admin']);  // Navigate back to the admin panel after updating
+    });
+  }
+  goBack() {
+    this.router.navigate(['/admin']);  // Navigate back to the admin panel
+  }
 }

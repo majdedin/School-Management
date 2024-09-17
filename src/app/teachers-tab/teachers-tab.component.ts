@@ -8,34 +8,35 @@ import { TeachersService } from '../services/teachers.service';
   styleUrls: ['./teachers-tab.component.css']
 })
 export class TeachersTabComponent implements OnInit {
-  T: any = []
+  teachers: any[] = [];
 
-  constructor(
-    private router: Router,
-    private teacherservice: TeachersService
-
-  ) { }
+  constructor(private teachersService: TeachersService, private router: Router) {}
 
   ngOnInit(): void {
-    this.teacherservice.getAllteacheres().subscribe((data) => {
-      this.T = data.teachers
-    })
-  }
-  goToEdit(id: any) {
-    this.router.navigate([`edit-teachers/${id}`])
-  }
-  delete(id: any) {
-    this.teacherservice.deleteteacher(id).subscribe((data) => {
-      console.log('this response from BE', data)
-      this.teacherservice.getAllteacheres().subscribe((data)=>{
-        this.T =data.teachers;
-      
-  })
-    });
-      
-  }
-  display(id: any) {
-    this.router.navigate([`teacher-info/${id}`])
+    this.loadTeachers();
   }
 
+  loadTeachers() {
+    this.teachersService.getAllteacheres().subscribe((response: any) => {
+      this.teachers = response.teachers;
+    });
+  }
+
+  addNewTeacher() {
+    this.router.navigate(['/add-teacher']);  // Redirect to the add teacher component
+  }
+
+  display(id: string) {
+    this.router.navigate(['/teacher-info', id]);  // Redirect to teacher info component
+  }
+
+  editTeacher(id: string) {
+    this.router.navigate(['/edit-teachers', id]);  // Redirect to edit teacher component
+  }
+
+  deleteTeacher(id: string) {
+    this.teachersService.deleteteacher(id).subscribe(() => {
+      this.loadTeachers();  // Reload the teachers list after deletion
+    });
+  }
 }

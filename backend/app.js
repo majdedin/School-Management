@@ -7,84 +7,99 @@ const bodyParser = require("body-parser");
 //*********************Importation:mongoose***********************/
 const mongoose = require("mongoose");
 //EducationDB=>data base name
-mongoose.connect("mongodb://127.0.0.1:27017/educationDB", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
 
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://127.0.0.1:27017/educationDB';
-const options = {
+try {
+  mongoose.connect("mongodb://127.0.0.1:27017/educationDB", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+  });
+  console.log("MongoDB connected");
+} catch (err) {
+  console.error(err.message);
+  process.exit(1);
+}
+
+const MongoClient = require("mongodb").MongoClient;
+const url = "mongodb://127.0.0.1:27017/educationDB";
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
+
 //*********************express application************************/
 //creates express application
 const app = express();
 //import b crypt (module de cryptage)
 const bcrypt = require("bcrypt");
 
-
-
 //*********************app configuaration*************************/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //*********************Module d'Importation jsonwebtoken************************/
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 //*********************Module d'Importation express-session************************/
-const session = require('express-session');
+const session = require("express-session");
 //***********************importation multer******************************
-const path = require('path');
-const multer = require('multer');
+const path = require("path");
+const multer = require("multer");
 
 // Security configuration
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
-    res.setHeader(
-        "Access-Control-Allow-Headers",
+  res.setHeader(
+    "Access-Control-Allow-Headers",
 
-        "Origin, Accept, Content-Type, X-Requested-with, Authorization"
-    );
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, DELETE, OPTIONS, PATCH, PUT"
-    );
-    next();
+    "Origin, Accept, Content-Type, X-Requested-with, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, DELETE, OPTIONS, PATCH, PUT"
+  );
+  next();
 });
 //img configuration
-app.use('/shortCut', express.static(path.join('backend/photos')))
+app.use("/shortCut", express.static(path.join("backend/photos")));
 const MIME_TYPE = {
-    'image/png': 'png',
-    'image/jpeg': 'jpg',
-    'image/jpg': 'jpg'
-}
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+};
 
 const storageConfig = multer.diskStorage({
-    // destination
-    destination: (req, file, cb) => {
-        const isValid = MIME_TYPE[file.mimetype];
-        if (isValid) {
-            cb(null, 'backend/photos')
-        }
-    },
-    filename: (req, file, cb) => {
-        const name = file.originalname.toLowerCase().split(' ').join('-');
-        const extension = MIME_TYPE[file.mimetype];
-        const imgName = name + '-' + Date.now() + '-crococoder-' + '.' +
-            extension;
-        cb(null, imgName);
+  // destination
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE[file.mimetype];
+    if (isValid) {
+      cb(null, "backend/photos");
     }
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname.toLowerCase().split(" ").join("-");
+    const extension = MIME_TYPE[file.mimetype];
+    const imgName = name + "-" + Date.now() + "-crococoder-" + "." + extension;
+    cb(null, imgName);
+  },
 });
 //************secret key configuration
-const secretKey = 'your-secret-key';
-app.use(session({ secret: secretKey, }));
+const secretKey = "your secret key";
+app.use(
+  session({
+    secret: "votre secret ici", // Remplacez par une clé secrète sécurisée
+    resave: false, // Ne sauvegarde pas la session si elle n'a pas été modifiée
+    saveUninitialized: false, // Ne sauvegarde pas les sessions non initialisées
+    cookie: { secure: false }, // Changez 'secure' en true si vous utilisez HTTPS
+  })
+);
+
 // //*********************Models Importation*************************/
 const Course = require("./models/course");
 const Teacher = require("./models/teacher");
 const Users = require("./models/user");
+const Student = require("./models/student");
+const Parent = require("./models/parent");
 
 // Fake datebase
 //courses
@@ -168,191 +183,383 @@ const Users = require("./models/user");
 //     return max + 1;
 // }
 // //*********************business Logics signup user**********/.
-app.post("/api/user/signUp", multer({ storage: storageConfig }).single("img"), (req, res) => {
+app.post(
+  "/api/user/signUp",
+  multer({ storage: storageConfig }).single("img"),
+  (req, res) => {
     //instructon
     Users.findOne({ email: req.body.email }).then((response) => {
-        console.log("email", response);
-        if (!response) {
-            bcrypt.hash(req.body.pwd, 10).then((cryptedPwd) => {
-                console.log("Here crypted pwd", cryptedPwd);
-                req.body.pwd = cryptedPwd;
-                if (req.file) {
-                    req.body.path = `http://localhost:3000/shortCut/${req.file.filename}`
-                } else {
-                    req.body.path = `http://localhost:3000/shortCut/avatar.png`
-                }
-                let user = new Users(req.body);
-                user.save();
-                res.json({ isAdded: true });
-            });
-        } else {
-            res.json({ isAdded: false });
-        }
+      console.log("email", response);
+      if (!response) {
+        bcrypt.hash(req.body.pwd, 10).then((cryptedPwd) => {
+          console.log("Here crypted pwd", cryptedPwd);
+          req.body.pwd = cryptedPwd;
+          if (req.file) {
+            req.body.path = `http://localhost:3000/shortCut/${req.file.filename}`;
+          } else {
+            req.body.path = `http://localhost:3000/shortCut/avatar.png`;
+          }
+          let user = new Users(req.body);
+          user.save();
+          res.json({ isAdded: true });
+        });
+      } else {
+        res.json({ isAdded: false });
+      }
     });
-});
+  }
+);
 // //*********************business Logics logIn**********/.
 app.post("/api/user/logIn", (req, res) => {
-    Users.findOne({ email: req.body.email }).then((response) => {
-        console.log("here objecttt", response);
-        console.log("here email", req.body.email)
-        if (!response) {
-            res.json({ msg: "check your email" });
+  Users.findOne({ email: req.body.email }).then((response) => {
+    console.log("here objecttt", response);
+    console.log("here email", req.body.email);
+    if (!response) {
+      res.json({ msg: "check your email" });
+    } else {
+      bcrypt.compare(req.body.pwd, response.pwd).then((cryptedResult) => {
+        console.log("cryptedResult", cryptedResult);
+        if (!cryptedResult) {
+          res.json({ msg: "check your pwd" });
         } else {
-            bcrypt.compare(req.body.pwd, response.pwd).then((cryptedResult) => {
-                console.log("cryptedResult", cryptedResult);
-                if (!cryptedResult) {
-                    res.json({ msg: "check your pwd" });
-                } else {
-                    let userToSend = {
-                        role: response.role,
-                        firstName: response.firstName,
-                        lastName: response.lastName,
-                        email: response.email,
-                        id: response._id,
-                    };
-                    const token = jwt.sign(userToSend, secretKey, { expiresIn: "24h" });
-                    res.json({ msg: 'welcome', user: token })
-                    console.log("welcome",token);
-                    
-                }
-            });
+          let userToSend = {
+            role: response.role,
+            firstName: response.firstName,
+            lastName: response.lastName,
+            email: response.email,
+            id: response._id,
+          };
+          const token = jwt.sign(userToSend, secretKey, { expiresIn: "24h" });
+          res.json({ msg: "welcome", user: token });
+          console.log("welcome", token);
         }
-    });
+      });
+    }
+  });
 });
-
 
 //business Logics: add course
 app.post("/api/course", (req, res) => {
-    //instructon
-    console.log("here into BL:Add course", req.body);
-    let course = new Course(req.body);
-    course.save();
-    res.json({ isAdded: true });
+  //instructon
+  console.log("here into BL:Add course", req.body);
+  let course = new Course(req.body);
+  course.save();
+  res.json({ isAdded: true });
 });
 
 //business Logics: Edit course
 app.put("/api/course", (req, res) => {
-    //instruction
-    console.log("here into BL:Edit course", req.body);
-    Course.updateOne({ _id: req.body._id }, req.body).then((responseUpdate) => {
-        console.log("responseUpdate", responseUpdate);
-        if (responseUpdate.nModified == 1) {
-            res.json({ isEdited: "success" });
-        } else {
-            res.json({ isEdited: "Echec" });
-        }
-    });
+  //instruction
+  console.log("here into BL:Edit course", req.body);
+  Course.updateOne({ _id: req.body._id }, req.body).then((responseUpdate) => {
+    console.log("responseUpdate", responseUpdate);
+    if (responseUpdate.nModified == 1) {
+      res.json({ isEdited: "success" });
+    } else {
+      res.json({ isEdited: "Echec" });
+    }
+  });
 });
 
 //business Logics: get all course
 app.get("/api/course", (req, res) => {
-    //instruction
-    console.log("here into BL:Get All Course");
-    Course.find().then((docs) => {
-        res.json({ courses: docs });
-    });
+  //instruction
+  console.log("here into BL:Get All Course");
+  Course.find().then((docs) => {
+    res.json({ courses: docs });
+  });
 });
 // business Logics : delete course by ID
 app.delete("/api/course/:id", (req, res) => {
-    //instruction
-    console.log("Here into BL : delete course By id", req.params.id);
-    Course.deleteOne({ _id: req.params.id }).then((responseDeleteOne) => {
-        console.log("responseDeleteOne", responseDeleteOne);
-        if (responseDeleteOne.deletedCount == 1) {
-            res.json({ isDeleted: true });
-        } else {
-            res.json({ isDeleted: false });
-        }
-    });
+  //instruction
+  console.log("Here into BL : delete course By id", req.params.id);
+  Course.deleteOne({ _id: req.params.id }).then((responseDeleteOne) => {
+    console.log("responseDeleteOne", responseDeleteOne);
+    if (responseDeleteOne.deletedCount == 1) {
+      res.json({ isDeleted: true });
+    } else {
+      res.json({ isDeleted: false });
+    }
+  });
 });
 
 //business Logics : get course by id
 app.get("/api/course/:id", (req, res) => {
-    console.log("here get course By id", req.params.id);
-    Course.findById(req.params.id).then((doc) => {
-        res.json({ course: doc });
-    });
+  console.log("here get course By id", req.params.id);
+  Course.findById(req.params.id).then((doc) => {
+    res.json({ course: doc });
+  });
 });
 
 app.post("/api/course/search", (req, res) => {
-    //instructon search
-    console.log("here into BL:Add course", req.body);
-    let courses = [];
-    for (let i = 0; i < coursesTab.length; i++) {
-        if (
-            coursesTab[i].scoreOne == req.body.score1 ||
-            coursesTab[i].scoreTwo == req.body.score2
-        ) {
-            courses.push(coursesTab[i]);
-        }
+  //instructon search
+  console.log("here into BL:Add course", req.body);
+  let courses = [];
+  for (let i = 0; i < coursesTab.length; i++) {
+    if (
+      coursesTab[i].scoreOne == req.body.score1 ||
+      coursesTab[i].scoreTwo == req.body.score2
+    ) {
+      courses.push(coursesTab[i]);
     }
-    res.json({ T: courses });
+  }
+  res.json({ T: courses });
 });
 
 //business Logics: add teachers
 app.post("/api/teacher", (req, res) => {
-    //instructon
-    console.log("here into BL:Add teacher", req.body);
-    let teacher = new Teacher(req.body);
-    teacher.save();
-    res.json({ isAdded: true });
+  //instructon
+  console.log("here into BL:Add teacher", req.body);
+  let teacher = new Teacher(req.body);
+  teacher.save();
+  res.json({ isAdded: true });
 });
 //business Logics: Edit teacher
 app.put("/api/teacher", (req, res) => {
-    //instruction
-    console.log("here into BL:Edit teacher", req.body);
-    Teacher.updateOne({ _id: req.params._idid }, req.body).then((update) => {
-        console.log("update", update);
-        if (update.nModified == 1) {
-            res.json({ isEdited: "success" });
-        } else {
-            res.json({ isEdited: "echec" });
-        }
-    });
+  //instruction
+  console.log("here into BL:Edit teacher", req.body);
+  Teacher.updateOne({ _id: req.body._id }, req.body).then((update) => {
+    console.log("update", update);
+    if (update.nModified == 1) {
+      res.json({ isEdited: "success" });
+    } else {
+      res.json({ isEdited: "echec" });
+    }
+  });
 });
 
 //business Logics: get all teacher
 app.get("/api/teacher", (req, res) => {
-    //instruction
-    console.log("here into BL:Get All teacher");
-    Teacher.find().then((response) => {
-        res.json({ teachers: response });
-    });
+  //instruction
+  console.log("here into BL:Get All teacher");
+  Teacher.find().then((response) => {
+    res.json({ teachers: response });
+  });
 });
 // business Logics : delete teacher by ID
 app.delete("/api/teacher/:id", (req, res) => {
-    //instruction
-    console.log("Here into BL : delete teacher By id", req.params.id);
-    Teacher.deleteOne({ _id: req.params.id }).then((response) => {
-        console.log("delete", response);
-        if (response.deletedCount == 1) {
-            res.json({ isDeleted: true });
-        } else {
-            res.json({ isDeleted: false });
-        }
-    });
+  //instruction
+  console.log("Here into BL : delete teacher By id", req.params.id);
+  Teacher.deleteOne({ _id: req.params.id }).then((response) => {
+    console.log("delete", response);
+    if (response.deletedCount == 1) {
+      res.json({ isDeleted: true });
+    } else {
+      res.json({ isDeleted: false });
+    }
+  });
 });
 //business Logics : get teacher by id
 app.get("/api/teacher/:id", (req, res) => {
-    console.log("here get teacher By id", req.params.id);
-    Teacher.findById(req.params.id).then((response) => {
-        console.log("find b id", response);
-        res.json({ teacher: response });
-    });
+  console.log("here get teacher By id", req.params.id);
+  Teacher.findById(req.params.id).then((response) => {
+    console.log("find b id", response);
+    res.json({ teacher: response });
+  });
 });
 app.post("/api/teacher/search", (req, res) => {
-    //instructon
-    console.log("here into BL:Add teacher", req.body);
-    let teachers = [];
-    for (let i = 0; i < teachersTab.length; i++) {
-        if (
-            teachersTab[i].name == req.body.Name ||
-            teachersTab[i].speciality == req.body.speciality
-        ) {
-            teachers.push(teachersTab[i]);
-        }
+  //instructon
+  console.log("here into BL:Add teacher", req.body);
+  let teachers = [];
+  for (let i = 0; i < teachersTab.length; i++) {
+    if (
+      teachersTab[i].name == req.body.Name ||
+      teachersTab[i].speciality == req.body.speciality
+    ) {
+      teachers.push(teachersTab[i]);
     }
-    res.json({ T: teachers });
+  }
+  res.json({ T: teachers });
+});
+//***************************************************************** Mariemmm*********************************************/
+app.get("/api/user/profil/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Recherchez l'utilisateur par ID
+    const user = await Users.findById(id).select("-password"); // Exclut le mot de passe de la réponse
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+app.put("/api/user/profil/:id", async (req, res) => {
+  try {
+    const userId = req.params.id; // Récupérer l'ID depuis l'URL
+    const updateData = req.body; // Récupérer les nouvelles données utilisateur envoyées depuis le frontend
+
+    // Vérifiez si l'utilisateur est un enseignant (Teacher) ou un autre rôle
+    const user = await Users.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    let updatedUser;
+
+    // Mise à jour en fonction du rôle de l'utilisateur
+    if (user.role === "teacher") {
+      // Utilisez le modèle Teacher pour mettre à jour les champs spécifiques à un enseignant
+      updatedUser = await mongoose
+        .model("teacher")
+        .findByIdAndUpdate(
+          userId,
+          {
+            firstName: updateData.firstName,
+            lastName: updateData.lastName,
+            age: updateData.age,
+            address: updateData.address,
+            speciality: updateData.speciality, // Champ spécifique à Teacher
+            experience: updateData.experience, // Champ spécifique à Teacher
+          },
+          { new: true, runValidators: true }
+        )
+        .select("-password");
+    } else if (user.role === "student") {
+      // Utilisez le modèle Student pour mettre à jour les champs spécifiques à un étudiant
+      updatedUser = await mongoose
+        .model("Student")
+        .findByIdAndUpdate(userId, updateData, {
+          new: true,
+          runValidators: true,
+        })
+        .select("-password");
+    } else {
+      // Sinon, mettre à jour l'utilisateur générique
+      updatedUser = await Users.findByIdAndUpdate(userId, updateData, {
+        new: true,
+        runValidators: true,
+      }).select("-password");
+    }
+
+    // Renvoie l'utilisateur mis à jour
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 });
 
+app.post("/api/students/", async (req, res) => {
+  console.log("Here into BL: Add student", req.body);
+  try {
+    const newStudent = new Student(req.body);
+    await newStudent.save();
+    res
+      .status(201)
+      .json({ message: "Student added successfully", student: newStudent });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding student", error });
+  }
+});
+// Update a student
+app.put("/api/students/:_id", (req, res) => {
+  console.log("here into BL:Edit student", req.body);
+  Student.updateOne({ _id: req.params._id }, req.body).then((update) => {
+    console.log("update", update);
+    if (update.nModified == 1) {
+      res.json({ isEdited: "success" });
+    } else {
+      res.json({ isEdited: "echec" });
+    }
+  });
+});
+
+// Get all students
+app.get("/api/students/", (req, res) => {
+  console.log("here into BL:Get All students");
+  Student.find().then((response) => {
+    res.json({ students: response });
+  });
+});
+
+// Delete a student by ID
+app.delete("/api/students/:id", (req, res) => {
+  console.log("Here into BL : delete student By id", req.params.id);
+  Student.deleteOne({ _id: req.params.id }).then((response) => {
+    console.log("delete", response);
+    if (response.deletedCount == 1) {
+      res.json({ isDeleted: true });
+    } else {
+      res.json({ isDeleted: false });
+    }
+  });
+});
+
+// Get student by ID
+app.get("/api/students/:id", (req, res) => {
+  console.log("here get student By id", req.params.id);
+  Student.findById(req.params.id).then((response) => {
+    console.log("find by id", response);
+    res.json({ student: response });
+  });
+});
+
+app.post("/api/parents/", async (req, res) => {
+  console.log("Here into BL: Add parent", req.body);
+  try {
+    const newParent = new Parent(req.body);
+    await newParent.save();
+    res
+      .status(201)
+      .json({ message: "Parent added successfully", parent: newParent });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding parent", error });
+  }
+});
+// Update a parent
+app.put("/api/parents/", (req, res) => {
+  console.log("here into BL:Edit parent", req.body);
+  Parent.updateOne({ _id: req.body._id }, req.body).then((update) => {
+    console.log("update", update);
+    if (update.nModified == 1) {
+      res.json({ isEdited: "success" });
+    } else {
+      res.json({ isEdited: "echec" });
+    }
+  });
+});
+
+// Get all parents
+app.get("/api/parents/", (req, res) => {
+  console.log("here into BL:Get All parents");
+  Parent.find().then((response) => {
+    res.json({ parents: response });
+  });
+});
+
+// Delete a parent by ID
+app.delete("/api/parents/:id", (req, res) => {
+  console.log("Here into BL : delete parent By id", req.params.id);
+  Parent.deleteOne({ _id: req.params.id }).then((response) => {
+    console.log("delete", response);
+    if (response.deletedCount == 1) {
+      res.json({ isDeleted: true });
+    } else {
+      res.json({ isDeleted: false });
+    }
+  });
+});
+
+// Get parent by ID
+app.get("/api/parents/:id", (req, res) => {
+  console.log("here get parent By id", req.params.id);
+  Parent.findById(req.params.id).then((response) => {
+    console.log("find by id", response);
+    res.json({ parent: response });
+  });
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+app.listen(3000, () => {
+  console.log("Le serveur écoute sur le port 3000");
+});
 module.exports = app;

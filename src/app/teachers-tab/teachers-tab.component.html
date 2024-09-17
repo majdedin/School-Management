@@ -1,21 +1,33 @@
-<table class="table">
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-12 text-right">
+      <button class="btn btn-primary" (click)="addNewTeacher()">Add New Teacher</button>
+    </div>
+  </div>
+
+  <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">speciality</th>
-        <th scope="col">experience</th>
-        <th scope="col">action</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Speciality</th>
+        <th>Experience</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let elt of T">
-       
-        <td>{{elt._id}}</td>
-        <td>{{elt.name}}</td>
-        <td>{{elt.speciality}}</td>
-        <td>{{elt.experience}}</td>
-        <td><button style="margin-right: 2%;" type="button" class="btn btn-success" (click)="display(elt._id)">display</button> <button type="button" class="btn btn-danger" (click)="goToEdit(elt._id)">edit</button><button type="button" class="btn btn-danger" (click)="delete(elt._id)">delete</button></td>
+      <tr *ngFor="let teacher of teachers">
+        <td>{{teacher._id}}</td>
+        <td>{{teacher.firstName}} {{teacher.lastName}}</td>
+  
+        <td>{{teacher.speciality}}</td>
+        <td>{{teacher.experience}}</td>
+        <td>
+          <button class="btn btn-success mr-2" (click)="display(teacher._id)">Display</button>
+          <button class="btn btn-primary mr-2" (click)="editTeacher(teacher._id)">Edit</button>
+          <button class="btn btn-danger" (click)="deleteTeacher(teacher._id)">Delete</button>
+        </td>
       </tr>
     </tbody>
   </table>
+</div>

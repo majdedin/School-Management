@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup, RequiredValidator, Validators } from '@angular/
 export class AddTeacherComponent implements OnInit {
   teacher:any={};
   teacherForm!:FormGroup
-
+  specialities: string[] = ['Networking', 'Development', 'Project Management'];
 
   constructor(
     private router:Router,
@@ -21,16 +21,19 @@ export class AddTeacherComponent implements OnInit {
 
   ngOnInit(): void {
     this.teacherForm=this.formBuilder.group({
-      name:['',[Validators.required]],
+      firstName:['',[Validators.required]],
+      lastName:['',[Validators.required]],
       speciality:['',[Validators.required]],
       experience:['',[Validators.required]],
     })
   }
-  addteacher(){
+  addTeacher(){
     this.teacherService.addteacher(this.teacher).subscribe((response)=>{
       console.log('this is response from BE',response);
       this.router.navigate(['admin'])
     })
   }
-
+  goBack() {
+    this.router.navigate(['/admin']);  // Navigate back to the admin panel
+  }
 }

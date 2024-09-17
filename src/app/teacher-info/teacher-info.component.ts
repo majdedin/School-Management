@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TeachersService } from '../services/teachers.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-info',
@@ -8,21 +8,23 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./teacher-info.component.css']
 })
 export class TeacherInfoComponent implements OnInit {
-  teacher:any;
-  id:any;
-  
+  teacher: any = {};
 
-  constructor(
-    private teacherService:TeachersService,
-    private activatedrout:ActivatedRoute
-
-  ) { }
+  constructor(private teachersService: TeachersService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.id=this.activatedrout.snapshot.params['id']
-    this.teacherService.getteacherById(this.id).subscribe((data)=>{
-      console.log('this is from BE',data)
-      this.teacher=data.teacher;
-    })
-}
+    const teacherId = this.route.snapshot.paramMap.get('id');
+    if (teacherId) {
+      this.loadTeacher(teacherId);
+    }
+  }
+
+  loadTeacher(id: string) {
+    this.teachersService.getteacherById(id).subscribe((response) => {
+      this.teacher = response.teacher;
+    });
+  }
+  goBack() {
+    this.router.navigate(['/admin']);  // Navigate back to the admin panel
+  }
 }

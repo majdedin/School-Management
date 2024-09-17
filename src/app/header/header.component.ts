@@ -2,48 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  user:any;
+  user: any;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-  
+    this.isLoggedIn(); // Appel pour définir l'utilisateur
   }
-  isLoggedIn(){
-    let token =sessionStorage.getItem('token')
+
+  isLoggedIn() {
+    let token = sessionStorage.getItem('jwt');
     if (token) {
-      this.user=jwtDecode(token)
-      
+      this.user = jwtDecode(token);
     }
-    return !!token;
-}
-logout (){
-  sessionStorage.removeItem("token");
-  this.router.navigate(['/']);
-}
-}
+    return !!token; // Retourne true si le token existe
+  }
 
-// ngOnInit(): void {
-//   let token=sessionStorage.getItem('jwt');
-//   if (token) {
-//     this.decoded=jwtDecode(token)
-    
-//   }
-// }
-// isLoggedIn(){
-//   let token=sessionStorage.getItem('jwt');
-//   if (token) {
-//     this.decoded=jwtDecode(token)
-    
-//   }
-//   return !!token
-// }
-
-// }
+  logout() {
+    sessionStorage.removeItem('jwt');
+    this.router.navigate(['/']);
+  }
+}

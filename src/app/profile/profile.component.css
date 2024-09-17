@@ -1,0 +1,14 @@
+.container {
+    max-width: 600px;
+  }
+  
+  .card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .btn-primary {
+    width: 100%;
+  }
+  

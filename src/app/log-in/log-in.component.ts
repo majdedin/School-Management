@@ -35,7 +35,9 @@ export class LogInComponent implements OnInit {
         //decodage token pr récupérer fname,lastname,............role
         let decoded: any = jwtDecode(response.user);
         console.log('here decoded token', decoded);
+        const user = JSON.stringify(decoded);
 
+        localStorage.setItem("connectedeUser",user)
         if (decoded.role == "admin") {
           this.router.navigate(['admin'])
         } else {

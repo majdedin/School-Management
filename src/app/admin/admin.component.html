@@ -1,15 +1,30 @@
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-            aria-selected="true">teachers</a>
+      <a class="nav-link active" id="teachers-tab" data-toggle="tab" href="#teachers" role="tab" aria-controls="teachers" aria-selected="true">Teachers</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-            aria-selected="false">courses</a>
+      <a class="nav-link" id="students-tab" data-toggle="tab" href="#students" role="tab" aria-controls="students" aria-selected="false">Students</a>
     </li>
-    
-</ul>
-<div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><app-teachers-tab></app-teachers-tab> </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"> <app-courses-tab></app-courses-tab> </div>
-</div>
+    <li class="nav-item">
+      <a class="nav-link" id="parents-tab" data-toggle="tab" href="#parents" role="tab" aria-controls="parents" aria-selected="false">Parents</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses" role="tab" aria-controls="courses" aria-selected="false">Courses</a>
+    </li>
+  </ul>
+  
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
+      <app-teachers-tab></app-teachers-tab>
+    </div>
+    <div class="tab-pane fade" id="students" role="tabpanel" aria-labelledby="students-tab">
+      <app-students-tab></app-students-tab>
+    </div>
+    <div class="tab-pane fade" id="parents" role="tabpanel" aria-labelledby="parents-tab">
+      <app-parents-tab></app-parents-tab>
+    </div>
+    <div class="tab-pane fade" id="courses" role="tabpanel" aria-labelledby="courses-tab">
+      <app-courses-tab></app-courses-tab>
+    </div>
+  </div>
+  

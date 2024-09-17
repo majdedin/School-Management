@@ -15,6 +15,12 @@ import { EditTeacherComponent } from './edit-teacher/edit-teacher.component';
 import { TeacherInfoComponent } from './teacher-info/teacher-info.component';
 import { ClassesComponent } from './classes/classes.component';
 import { CourseInfoComponent } from './course-info/course-info.component';
+import { ProfileComponent } from './profile/profile.component'; 
+import { AddStudentComponent } from './add-student/add-student.component';
+import { EditStudentComponent } from './edit-student/edit-student.component';
+import { StudentInfoComponent } from './student-info/student-info.component';
+import { AddParentComponent } from './add-parent/add-parent.component';
+import { EditParentComponent } from './edit-parent/edit-parent.component';
 
 const routes: Routes = [
   {path: 'Home',component:HomeComponent},
@@ -34,7 +40,15 @@ const routes: Routes = [
   {path: 'edit-courses/:id',component:EditCoursesComponent},
   {path: 'edit-teachers/:id',component:EditTeacherComponent},
   {path: 'teacher-info/:id',component:TeacherInfoComponent},
-  {path: 'course-info/:id',component:CourseInfoComponent}
+  {path: 'course-info/:id',component:CourseInfoComponent},
+  { path: 'profile', component: ProfileComponent },
+  { path: 'add-student', component: AddStudentComponent },
+  { path: 'edit-student/:id', component: EditStudentComponent },
+  { path: 'student-info/:id', component: StudentInfoComponent },
+  { path: 'add-parent', component: AddParentComponent },
+  { path: 'edit-parent/:id', component: EditParentComponent },
+  { path: 'parent-info/:id', component: StudentInfoComponent },
+
 
 ];
 

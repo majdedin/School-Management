@@ -1,0 +1,31 @@
+<div class="container mt-5">
+    <h3>Manage Students</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Grade</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students">
+            <td>{{ student.firstName }}</td>
+            <td>{{ student.lastName }}</td>
+            <td>{{ student.age }}</td>
+            <td>{{ student.grade }}</td>
+            <td>
+              <button class="btn btn-info" (click)="editStudent(student._id)">Edit</button>
+              <button class="btn btn-danger" (click)="deleteStudent(student._id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Add Student Button -->
+    <button class="btn btn-success mt-3" (click)="addStudent()">Add Student</button>
+  </div>
+  

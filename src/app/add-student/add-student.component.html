@@ -1,0 +1,36 @@
+<div class="container" style="margin-top: 5%;">
+    <div class="row">
+      <div class="col-lg-7">
+        <h3 class="mb-4">Add New Student</h3>
+        <form #studentForm="ngForm" (ngSubmit)="addStudent()">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" [(ngModel)]="student.firstName" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="First Name" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" [(ngModel)]="student.lastName" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Last Name" required>
+          </div>
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" [(ngModel)]="student.age" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Age" required>
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" [(ngModel)]="student.address" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Address" required>
+          </div>
+          <div class="form-group">
+            <label for="grade">Grade</label>
+            <input type="number" [(ngModel)]="student.grade" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Grade" required>
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-primary py-3 px-5" value="Add Student">
+          </div>
+        </form>
+        
+        <!-- Back Button -->
+        <button class="btn btn-secondary mt-3" (click)="goBack()">Back</button>
+      </div>
+    </div>
+  </div>
+  

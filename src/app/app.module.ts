@@ -34,6 +34,15 @@ import { TeacherInfoComponent } from './teacher-info/teacher-info.component';
 import { ClassesComponent } from './classes/classes.component';
 import { ClassComponent } from './class/class.component';
 import { CourseInfoComponent } from './course-info/course-info.component';
+import { ProfileComponent } from './profile/profile.component';
+import { AddStudentComponent } from './add-student/add-student.component';
+import { EditStudentComponent } from './edit-student/edit-student.component';
+import { StudentInfoComponent } from './student-info/student-info.component';
+import { AddParentComponent } from './add-parent/add-parent.component';
+import { EditParentComponent } from './edit-parent/edit-parent.component';
+import { ParentInfoComponent } from './parent-info/parent-info.component';
+import { StudentsTabComponent } from './students-tab/students-tab.component';
+import { ParentsTabComponent } from './parents-tab/parents-tab.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +75,16 @@ import { CourseInfoComponent } from './course-info/course-info.component';
     TeacherInfoComponent,
     ClassesComponent,
     ClassComponent,
-    CourseInfoComponent
+    CourseInfoComponent,
+    ProfileComponent,
+    AddStudentComponent,
+    EditStudentComponent,
+    StudentInfoComponent,
+    AddParentComponent,
+    EditParentComponent,
+    ParentInfoComponent,
+    StudentsTabComponent,
+    ParentsTabComponent
   ],
   imports: [
     BrowserModule,
