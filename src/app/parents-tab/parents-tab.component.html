@@ -1,29 +1,29 @@
 <div class="container mt-5">
-    <h3>Manage Parents</h3>
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let parent of parents">
-            <td>{{ parent.firstName }}</td>
-            <td>{{ parent.lastName }}</td>
-            <td>{{ parent.email }}</td>
-            <td>
-              <button class="btn btn-info" (click)="editParent(parent._id)">Edit</button>
-              <button class="btn btn-danger" (click)="deleteParent(parent._id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!-- Add Parent Button -->
-    <button class="btn btn-success mt-3" (click)="addParent()">Add Parent</button>
+  <h3>Manage Parents</h3>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let parent of parents">
+          <td>{{ parent.firstName }}</td>
+          <td>{{ parent.lastName }}</td>
+          <td>{{ parent.email }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="displayParent(parent._id)">Display</button>
+            <button class="btn btn-info" (click)="editParent(parent._id)">Edit</button>
+            <button class="btn btn-danger" (click)="deleteParent(parent._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  
+  <!-- Add Parent Button -->
+  <button class="btn btn-success mt-3" (click)="addParent()">Add Parent</button>
+</div>

@@ -1,23 +1,32 @@
-<table class="table">
-    <thead>
+<div class="container mt-5">
+  <h3>Courses</h3>
+  <table class="table table-bordered">
+    <thead class="thead-dark">
       <tr>
-        <th scope="col">id</th>
-        <th scope="col">Title</th>
-        <th scope="col">price</th>
-        <th scope="col">duration</th>
-        <th scope="col">totalSeats</th>
-        <th scope="col">ageOfKids</th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Duration</th>
+        <th>Total Seats</th>
+        <th>Age of Kids</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let elt of T">
-       <td>{{elt._id}}</td>
-        <td>{{elt.title}}</td>
-        <td>{{elt.price}}</td>
-        <td>{{elt.duration}}</td>
-        <td>{{elt.totalSeats}}</td>
-        <td>{{elt.ageOfKids}}</td>
-        <td><button style="margin-right: 2%;" type="button" class="btn btn-success" (click)="goToInfo(elt._id)">display</button> <button type="button" class="btn btn-danger" (click)="goToEdit(elt._id)">edit</button><button style="margin-right: 2%;" type="button" class="btn btn-danger" (click)="delete(elt._id)">delete</button></td>
+      <tr *ngFor="let course of courses">
+        <td>{{ course._id }}</td>
+        <td>{{ course.title }}</td>
+        <td>{{ course.price }}</td>
+        <td>{{ course.duration }}</td>
+        <td>{{ course.totalSeats }}</td>
+        <td>{{ course.ageOfKids }}</td>
+        <td>
+          <button class="btn btn-success" (click)="goToInfo(course._id)">Display</button>
+          <button class="btn btn-info" (click)="goToEdit(course._id)">Edit</button>
+          <button class="btn btn-danger" (click)="delete(course._id)">Delete</button>
+        </td>
       </tr>
     </tbody>
   </table>
+  <button class="btn btn-primary mt-3" (click)="goToAdd()">Add Course</button>
+</div>

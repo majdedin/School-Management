@@ -21,6 +21,7 @@ import { EditStudentComponent } from './edit-student/edit-student.component';
 import { StudentInfoComponent } from './student-info/student-info.component';
 import { AddParentComponent } from './add-parent/add-parent.component';
 import { EditParentComponent } from './edit-parent/edit-parent.component';
+import { ParentInfoComponent } from './parent-info/parent-info.component';
 
 const routes: Routes = [
   {path: 'Home',component:HomeComponent},
@@ -47,7 +48,7 @@ const routes: Routes = [
   { path: 'student-info/:id', component: StudentInfoComponent },
   { path: 'add-parent', component: AddParentComponent },
   { path: 'edit-parent/:id', component: EditParentComponent },
-  { path: 'parent-info/:id', component: StudentInfoComponent },
+  { path: 'parent-info/:id', component: ParentInfoComponent },
 
 
 ];

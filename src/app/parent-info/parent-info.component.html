@@ -1,1 +1,11 @@
-<p>parent-info works!</p>
+<div class="container mt-5">
+    <h3>Parent Information</h3>
+    <p><strong>First Name:</strong> {{ parent?.firstName }}</p>
+    <p><strong>Last Name:</strong> {{ parent?.lastName }}</p>
+    <p><strong>Email:</strong> {{ parent?.email }}</p>
+    <p><strong>Address:</strong> {{ parent?.address }}</p>
+    
+    <!-- Back Button -->
+    <button class="btn btn-secondary mt-3" (click)="goBack()">Back</button>
+  </div>
+  

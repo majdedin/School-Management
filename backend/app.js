@@ -449,8 +449,26 @@ app.put("/api/user/profil/:id", async (req, res) => {
 app.post("/api/students/", async (req, res) => {
   console.log("Here into BL: Add student", req.body);
   try {
-    const newStudent = new Student(req.body);
+    const { firstName, lastName, age, address, grade, parentId } = req.body;
+
+    // Create the new student
+    const newStudent = new Student({
+      firstName,
+      lastName,
+      age,
+      address,
+      grade,
+    });
+
     await newStudent.save();
+
+    // If a parent is assigned, update the parent's children array
+    if (parentId) {
+      await Parent.findByIdAndUpdate(parentId, {
+        $push: { children: newStudent._id },
+      });
+    }
+
     res
       .status(201)
       .json({ message: "Student added successfully", student: newStudent });
@@ -514,9 +532,9 @@ app.post("/api/parents/", async (req, res) => {
   }
 });
 // Update a parent
-app.put("/api/parents/", (req, res) => {
+app.put("/api/parents/:_id", (req, res) => {
   console.log("here into BL:Edit parent", req.body);
-  Parent.updateOne({ _id: req.body._id }, req.body).then((update) => {
+  Parent.updateOne({ _id: req.params._id }, req.body).then((update) => {
     console.log("update", update);
     if (update.nModified == 1) {
       res.json({ isEdited: "success" });
