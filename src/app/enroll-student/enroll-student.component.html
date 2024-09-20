@@ -1,0 +1,32 @@
+<div class="container mt-5">
+    <h3>Enroll Student in a Course</h3>
+    
+    <!-- Student Information (optional) -->
+    <div class="mb-3">
+      <p><strong>Student Name:</strong> {{ student?.firstName }} {{ student?.lastName }}</p>
+    </div>
+  
+    <!-- Course Selection -->
+    <div class="form-group">
+      <label for="course">Select Course</label>
+      <select 
+        [(ngModel)]="selectedCourseId" 
+        name="course" 
+        class="form-control" 
+        required>
+        <option *ngFor="let course of courses" [value]="course._id">
+          {{ course.title }} - {{ course.duration }} hours
+        </option>
+      </select>
+      <div *ngIf="!selectedCourseId" class="text-danger">
+        Course is required
+      </div>
+    </div>
+  
+    <!-- Enroll Button -->
+    <button class="btn btn-primary mt-3" (click)="enrollStudent()">Enroll</button>
+  
+    <!-- Back Button -->
+    <button class="btn btn-secondary mt-3" (click)="goBack()">Back</button>
+  </div>
+  

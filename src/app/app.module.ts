@@ -43,6 +43,7 @@ import { EditParentComponent } from './edit-parent/edit-parent.component';
 import { ParentInfoComponent } from './parent-info/parent-info.component';
 import { StudentsTabComponent } from './students-tab/students-tab.component';
 import { ParentsTabComponent } from './parents-tab/parents-tab.component';
+import { EnrollStudentComponent } from './enroll-student/enroll-student.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { ParentsTabComponent } from './parents-tab/parents-tab.component';
     EditParentComponent,
     ParentInfoComponent,
     StudentsTabComponent,
-    ParentsTabComponent
+    ParentsTabComponent,
+    EnrollStudentComponent
   ],
   imports: [
     BrowserModule,

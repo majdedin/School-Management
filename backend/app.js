@@ -239,12 +239,38 @@ app.post("/api/user/logIn", (req, res) => {
 });
 
 //business Logics: add course
-app.post("/api/course", (req, res) => {
-  //instructon
-  console.log("here into BL:Add course", req.body);
-  let course = new Course(req.body);
-  course.save();
-  res.json({ isAdded: true });
+// Post route to add a new course
+app.post("/api/courses", async (req, res) => {
+  console.log("cours hiiii");
+  try {
+    const {
+      title,
+      description,
+      price,
+      duration,
+      ageOfKids,
+      totalSeats,
+      teacherId,
+    } = req.body;
+
+    // Create a new course and associate it with the teacher
+    const newCourse = new Course({
+      title,
+      description,
+      price,
+      duration,
+      ageOfKids,
+      totalSeats,
+      teacher: teacherId, // Assign teacherId to the teacher field
+    });
+
+    await newCourse.save();
+    res
+      .status(201)
+      .json({ message: "Course added successfully", course: newCourse });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding course", error });
+  }
 });
 
 //business Logics: Edit course
@@ -262,7 +288,7 @@ app.put("/api/course", (req, res) => {
 });
 
 //business Logics: get all course
-app.get("/api/course", (req, res) => {
+app.get("/api/courses", (req, res) => {
   //instruction
   console.log("here into BL:Get All Course");
   Course.find().then((docs) => {
@@ -270,7 +296,7 @@ app.get("/api/course", (req, res) => {
   });
 });
 // business Logics : delete course by ID
-app.delete("/api/course/:id", (req, res) => {
+app.delete("/api/courses/:id", (req, res) => {
   //instruction
   console.log("Here into BL : delete course By id", req.params.id);
   Course.deleteOne({ _id: req.params.id }).then((responseDeleteOne) => {
@@ -284,14 +310,14 @@ app.delete("/api/course/:id", (req, res) => {
 });
 
 //business Logics : get course by id
-app.get("/api/course/:id", (req, res) => {
+app.get("/api/courses/:id", (req, res) => {
   console.log("here get course By id", req.params.id);
   Course.findById(req.params.id).then((doc) => {
     res.json({ course: doc });
   });
 });
 
-app.post("/api/course/search", (req, res) => {
+app.post("/api/courses/search", (req, res) => {
   //instructon search
   console.log("here into BL:Add course", req.body);
   let courses = [];
@@ -572,6 +598,56 @@ app.get("/api/parents/:id", (req, res) => {
     console.log("find by id", response);
     res.json({ parent: response });
   });
+});
+
+// Fetch students enrolled in a specific course
+app.get("/api/students/courses/:courseId", async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    // Find students where the `courses` array contains the specified `courseId`
+    const students = await Student.find({
+      courses: { $in: [courseId] },
+    }).populate("courses", "title");
+
+    if (!students.length) {
+      return res
+        .status(404)
+        .json({ message: "No students found for this course" });
+    }
+
+    res.status(200).json({ students });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching students", error });
+  }
+});
+
+// API to enroll a student in a course
+app.put("/api/students/:studentId/enroll", async (req, res) => {
+  const { studentId } = req.params;
+  const { courseId } = req.body; // Get the courseId from the request body
+  console.log("hiiiii");
+  try {
+    // Find the student and update the courses array
+    const updatedStudent = await Student.findByIdAndUpdate(
+      studentId,
+      { $addToSet: { courses: courseId } }, // Add courseId to courses array
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Student enrolled in course", student: updatedStudent });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error enrolling student in course", error });
+  }
 });
 
 app.get("/", (req, res) => {

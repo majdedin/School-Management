@@ -37,4 +37,9 @@ export class StudentsTabComponent implements OnInit {
       });
     }
   }
+
+  enroll(studentId: string): void {
+    this.router.navigate(['/enroll-student', studentId]);
+  }
+  
 }

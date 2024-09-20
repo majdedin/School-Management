@@ -34,4 +34,12 @@ export class StudentsService {
   deleteStudent(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
+  getStudentsByCourseId(courseId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/courses/${courseId}`);
+  }
+   // Enroll student in a course
+   enrollStudent(studentId: string, courseId: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${studentId}/enroll`, { courseId });
+  }
 }

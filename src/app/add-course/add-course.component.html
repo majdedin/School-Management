@@ -1,32 +1,148 @@
 <div class="container" style="margin-top: 5%;">
-    <div class="row">
-      <div class="col-lg-7">
-        <form #courseForm="ngForm" (ngSubmit)="addCourse()">
-          <div class="form-group">
-            <input type="text" [(ngModel)]="course.title" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="title">
-          </div>
-          <div class="form-group">
-            <input type="text" [(ngModel)]="course.ageOfKids" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="ageOfKids">
-          </div>
-          <div class="form-group">
-              <input type="text" [(ngModel)]="course.description" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="description">
-            </div>
-            <div class="form-group">
-              <input type="text" [(ngModel)]="course.price" [ngModelOptions]="{standalone:true}"  class="form-control" placeholder="price">
-            </div>
-            <div class="form-group">
-              <input type="text" [(ngModel)]="course.duration" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="duration">
-            </div>
-            <div class="form-group">
-              <input type="text" [(ngModel)]="course.totalSeats" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="totalSeats">
-            </div>
-          <div class="form-group">
-              <input type="submit" class="btn btn-primary py-3 px-5" value="Add">
-            </div>
-          
-          
-        </form>  
+  <div class="row justify-content-center">
+      <div class="col-lg-8">
+          <h3 class="text-center mb-4">Add New Course</h3>
+          <form #courseForm="ngForm" (ngSubmit)="addCourse()" novalidate>
+              
+              <!-- Course Title -->
+              <div class="form-group">
+                  <label for="title">Course Title</label>
+                  <input 
+                      type="text" 
+                      id="title" 
+                      [(ngModel)]="course.title" 
+                      name="title" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control" 
+                      placeholder="Enter course title"
+                      required
+                  >
+                  <div *ngIf="courseForm.submitted && !course.title" class="text-danger">
+                      Title is required
+                  </div>
+              </div>
+
+              <!-- Age of Kids -->
+              <div class="form-group">
+                  <label for="ageOfKids">Age Range</label>
+                  <input 
+                      type="text" 
+                      id="ageOfKids" 
+                      [(ngModel)]="course.ageOfKids" 
+                      name="ageOfKids" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control" 
+                      placeholder="Enter age range (e.g., 6-10 years)"
+                      required
+                  >
+                  <div *ngIf="courseForm.submitted && !course.ageOfKids" class="text-danger">
+                      Age range is required
+                  </div>
+              </div>
+
+              <!-- Course Description -->
+              <div class="form-group">
+                  <label for="description">Course Description</label>
+                  <textarea 
+                      id="description" 
+                      [(ngModel)]="course.description" 
+                      name="description" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control" 
+                      placeholder="Enter course description"
+                      rows="3"
+                      required
+                  ></textarea>
+                  <div *ngIf="courseForm.submitted && !course.description" class="text-danger">
+                      Description is required
+                  </div>
+              </div>
+
+              <!-- Price -->
+              <div class="form-group">
+                  <label for="price">Price ($)</label>
+                  <input 
+                      type="number" 
+                      id="price" 
+                      [(ngModel)]="course.price" 
+                      name="price" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control" 
+                      placeholder="Enter course price"
+                      required
+                  >
+                  <div *ngIf="courseForm.submitted && !course.price" class="text-danger">
+                      Price is required
+                  </div>
+              </div>
+
+              <!-- Duration -->
+              <div class="form-group">
+                  <label for="duration">Duration (hours)</label>
+                  <input 
+                      type="number" 
+                      id="duration" 
+                      [(ngModel)]="course.duration" 
+                      name="duration" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control" 
+                      placeholder="Enter course duration"
+                      required
+                  >
+                  <div *ngIf="courseForm.submitted && !course.duration" class="text-danger">
+                      Duration is required
+                  </div>
+              </div>
+
+              <!-- Total Seats -->
+              <div class="form-group">
+                  <label for="totalSeats">Total Seats</label>
+                  <input 
+                      type="number" 
+                      id="totalSeats" 
+                      [(ngModel)]="course.totalSeats" 
+                      name="totalSeats" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control" 
+                      placeholder="Enter the total number of seats"
+                      required
+                  >
+                  <div *ngIf="courseForm.submitted && !course.totalSeats" class="text-danger">
+                      Total seats is required
+                  </div>
+              </div>
+
+              <!-- Teacher Selection -->
+              <div class="form-group">
+                  <label for="teacher">Select Teacher</label>
+                  <select 
+                      id="teacher" 
+                      [(ngModel)]="course.teacherId" 
+                      name="teacher" 
+                      [ngModelOptions]="{standalone:true}" 
+                      class="form-control"
+                      required
+                  >
+                      <option *ngFor="let teacher of teachers" [value]="teacher._id">
+                          {{ teacher.firstName }} {{ teacher.lastName }}
+                      </option>
+                  </select>
+                  <div *ngIf="courseForm.submitted && !course.teacherId" class="text-danger">
+                      Teacher is required
+                  </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-group text-center">
+                  <input type="submit" class="btn btn-primary py-2 px-5" value="Add Course">
+              </div>
+
+              <!-- Back Button -->
+              <div class="form-group text-center">
+                  <button type="button" class="btn btn-secondary py-2 px-5" (click)="goBack()">Back</button>
+              </div>
+
+          </form>
       </div>
-     
-    </div>
   </div>
+</div>

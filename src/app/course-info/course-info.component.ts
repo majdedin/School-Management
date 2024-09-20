@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CoursesService } from '../services/courses.service';
 import { ActivatedRoute } from '@angular/router';
+import { CoursesService } from '../services/courses.service';
+import { StudentsService } from '../services/students.service';
 
 @Component({
   selector: 'app-course-info',
@@ -8,20 +9,33 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./course-info.component.css']
 })
 export class CourseInfoComponent implements OnInit {
-  course: any;
-  id:any;
-
+  courseId: any;
+  students: any[] = [];
+  course: any = {};
 
   constructor(
-    private courseService: CoursesService,
-    private activatedRoute: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private coursesService: CoursesService,
+    private studentsService: StudentsService
+  ) {}
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.params['id']
-    this.courseService.getcourseById(this.id).subscribe((data)=>{
-      this.course=data.course
-    })
+    this.courseId = this.route.snapshot.paramMap.get('id');
+    this.loadCourse();
+    this.loadStudents();
   }
 
+  // Fetch course details (optional, if needed)
+  loadCourse(): void {
+    this.coursesService.getcourseById(this.courseId).subscribe((data) => {
+      this.course = data.course;
+    });
+  }
+
+  // Fetch students enrolled in the course
+  loadStudents(): void {
+    this.studentsService.getStudentsByCourseId(this.courseId).subscribe((data) => {
+      this.students = data.students;
+    });
+  }
 }

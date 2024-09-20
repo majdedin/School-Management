@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoursesService } from '../services/courses.service';
+import { TeachersService } from '../services/teachers.service';
 
 @Component({
   selector: 'app-add-course',
@@ -9,10 +10,23 @@ import { CoursesService } from '../services/courses.service';
 })
 export class AddCourseComponent implements OnInit {
   course: any = {};
+  teachers: any[] = [];  // List of teachers
 
-  constructor(private coursesService: CoursesService, private router: Router) {}
+  constructor(
+    private coursesService: CoursesService,
+    private teachersService: TeachersService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTeachers(); // Load the teachers on init
+  }
+
+  loadTeachers(): void {
+    this.teachersService.getAllteacheres().subscribe((data) => {
+      this.teachers = data.teachers;
+    });
+  }
 
   addCourse(): void {
     this.coursesService.addcourse(this.course).subscribe(
@@ -24,5 +38,9 @@ export class AddCourseComponent implements OnInit {
         console.error('Error adding course', error);
       }
     );
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin']);
   }
 }

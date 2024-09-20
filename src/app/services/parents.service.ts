@@ -34,4 +34,5 @@ export class ParentsService {
   deleteParent(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  
 }
