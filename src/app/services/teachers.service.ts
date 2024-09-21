@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,4 +20,11 @@ export class TeachersService {
     return this.http.get<{teacher:any}>(`${this.teacherUrl}/${id}`);}
   getAllteacheres(){
     return this.http.get<{teachers:any}>(this.teacherUrl);}
+  getTeacherCourses(teacherId: any): Observable<any> {
+      return this.http.get(`${this.teacherUrl}/${teacherId}/courses`);
+    }
+    addCourse(teacherId: any, course: any): Observable<any> {
+      return this.http.post(`${this.teacherUrl}/${teacherId}/courses`, course);
+    }
+    
 }

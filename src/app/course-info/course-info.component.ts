@@ -38,4 +38,16 @@ export class CourseInfoComponent implements OnInit {
       this.students = data.students;
     });
   }
+  getEnrolledStudents(courseId: string): void {
+    this.studentsService.getStudentsByCourseId(courseId).subscribe((students) => {
+      // Filter to only show grades related to this course
+      this.students = students.map((student: any) => {
+        // Filter grades to include only the relevant course
+        const filteredGrades = student.grades.filter(
+          (grade: any) => grade.course._id === courseId
+        );
+        return { ...student, grades: filteredGrades };
+      });
+    });
+  }
 }

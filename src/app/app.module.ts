@@ -44,6 +44,7 @@ import { ParentInfoComponent } from './parent-info/parent-info.component';
 import { StudentsTabComponent } from './students-tab/students-tab.component';
 import { ParentsTabComponent } from './parents-tab/parents-tab.component';
 import { EnrollStudentComponent } from './enroll-student/enroll-student.component';
+import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { EnrollStudentComponent } from './enroll-student/enroll-student.componen
     ParentInfoComponent,
     StudentsTabComponent,
     ParentsTabComponent,
-    EnrollStudentComponent
+    EnrollStudentComponent,
+    TeacherDashboardComponent
   ],
   imports: [
     BrowserModule,

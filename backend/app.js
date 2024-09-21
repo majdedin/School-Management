@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 //*********************Importation:mongoose***********************/
 const mongoose = require("mongoose");
 //EducationDB=>data base name
+const cors = require("cors");
 
 try {
   mongoose.connect("mongodb://127.0.0.1:27017/educationDB", {
@@ -35,6 +36,7 @@ const bcrypt = require("bcrypt");
 //*********************app configuaration*************************/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 //*********************Module d'Importation jsonwebtoken************************/
 const jwt = require("jsonwebtoken");
@@ -635,9 +637,18 @@ app.put("/api/students/:studentId/enroll", async (req, res) => {
       { $addToSet: { courses: courseId } }, // Add courseId to courses array
       { new: true } // Return the updated document
     );
+    // 2. Find the course and add the student to the course's students array
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { $addToSet: { students: studentId } }, // Add studentId to the course's students array
+      { new: true } // Return the updated document
+    );
 
     if (!updatedStudent) {
       return res.status(404).json({ message: "Student not found" });
+    }
+    if (!updatedCourse) {
+      return res.status(404).json({ message: "Course not found" });
     }
 
     res
@@ -649,6 +660,95 @@ app.put("/api/students/:studentId/enroll", async (req, res) => {
       .json({ message: "Error enrolling student in course", error });
   }
 });
+// API to allow teachers to add courses
+app.post("/api/teacher/:teacherId/courses", async (req, res) => {
+  try {
+    console.log("hhhhhhhhhh");
+    const { teacherId } = req.params;
+    const newCourse = new Course({
+      ...req.body,
+      teacher: teacherId,
+    });
+    await newCourse.save();
+    res
+      .status(201)
+      .json({ message: "Course added successfully", course: newCourse });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding course", error });
+  }
+});
+// API to get all courses added by a specific teacher
+app.get("/api/teacher/:teacherId/courses", async (req, res) => {
+  try {
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    const { teacherId } = req.params;
+    const courses = await Course.find({ teacher: teacherId }).populate(
+      "firstName lastName"
+    );
+
+    if (!courses.length) {
+      return res
+        .status(404)
+        .json({ message: "No courses found for this teacher" });
+    }
+
+    res.status(200).json({ courses });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching courses", error });
+  }
+});
+
+// API to get students enrolled in a specific course
+app.get("/api/courses/:courseId/students", async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    // Find students enrolled in the given course and populate their grades for this course
+    const students = await Student.find({ courses: courseId }).populate({
+      path: "grades",
+      select: "title",
+    });
+
+    if (!students.length) {
+      return res
+        .status(404)
+        .json({ message: "No students found for this course" });
+    }
+
+    res.status(200).json({ students });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching students", error });
+  }
+});
+
+// API to assign a grade to a student for a specific course
+app.put(
+  "/api/courses/students/:courseId/:studentId/grade",
+  async (req, res) => {
+    try {
+      console.log("heeeerrree");
+      const { courseId, studentId } = req.params;
+      const { grade } = req.body;
+
+      // Find the student and update their grade for the course
+      const student = await Student.findById(studentId);
+      const courseGrade = student.grades.find(
+        (g) => g.course.toString() === courseId
+      );
+
+      if (courseGrade) {
+        courseGrade.grade = grade; // Update grade
+      } else {
+        student.grades.push({ course: courseId, grade });
+      }
+
+      await student.save();
+      res.status(200).json({ message: "Grade updated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Error updating grade", error });
+    }
+  }
+);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

@@ -20,6 +20,12 @@ export class CoursesService {
     return this.http.get<{course:any}>(`${this.courseUrl}/${id}`);}
   getAllcoursees(){
     return this.http.get<{courses:any}>(this.courseUrl);}
-
+    getCourseStudents(courseId: string): Observable<any> {
+      return this.http.get(`${this.courseUrl}/${courseId}/students`);
+    }
+  
+    assignGrade(studentId: any, courseId:   any,grade: number): Observable<any> {
+      return this.http.put(`${this.courseUrl}/students/${courseId}/${studentId}/grade`, { grade });
+    }
 
 }

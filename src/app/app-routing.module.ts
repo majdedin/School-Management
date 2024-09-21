@@ -23,6 +23,7 @@ import { AddParentComponent } from './add-parent/add-parent.component';
 import { EditParentComponent } from './edit-parent/edit-parent.component';
 import { ParentInfoComponent } from './parent-info/parent-info.component';
 import { EnrollStudentComponent } from './enroll-student/enroll-student.component';
+import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 
 const routes: Routes = [
   {path: 'Home',component:HomeComponent},
@@ -51,7 +52,7 @@ const routes: Routes = [
   { path: 'edit-parent/:id', component: EditParentComponent },
   { path: 'parent-info/:id', component: ParentInfoComponent },
   { path: 'enroll-student/:id', component: EnrollStudentComponent },
-
+  {path: 'teacher',component:TeacherDashboardComponent},
 
 
 ];

@@ -40,7 +40,12 @@ export class LogInComponent implements OnInit {
         localStorage.setItem("connectedeUser",user)
         if (decoded.role == "admin") {
           this.router.navigate(['admin'])
-        } else {
+        } else if 
+           (decoded.role == "teacher") {
+            this.router.navigate(['teacher'])
+          
+        }
+        else {
           this.router.navigate([''])
         }
       }
