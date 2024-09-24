@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">My Courses</h2>
+  
+    <div class="row">
+      <div class="col-md-4" *ngFor="let item of coursesWithGrades">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.course.title }}</h5>
+            <p class="card-text">
+              <strong>Description: </strong>{{ item.course.description }}
+            </p>
+            <p class="card-text">
+              <strong>Duration: </strong>{{ item.course.duration }} hours
+            </p>
+            <p class="card-text">
+              <strong>Price: </strong>\${{ item.course.price }}
+            </p>
+            <p class="card-text">
+              <strong>Grade: </strong>{{ item.grade }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

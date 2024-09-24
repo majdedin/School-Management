@@ -34,5 +34,7 @@ export class ParentsService {
   deleteParent(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
-  
+  getChildrenForParent(parentId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${parentId}/children`);
+  }
 }

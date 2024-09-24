@@ -23,9 +23,10 @@ export class HeaderComponent implements OnInit {
     }
     return !!token; // Retourne true si le token existe
   }
+  
 
   logout() {
     sessionStorage.removeItem('jwt');
-    this.router.navigate(['/']);
+    this.router.navigate(['/Home']);
   }
 }

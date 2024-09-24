@@ -42,4 +42,8 @@ export class StudentsService {
    enrollStudent(studentId: string, courseId: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/${studentId}/enroll`, { courseId });
   }
+
+  getCoursesForStudent(studentId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/students/${studentId}/courses`);
+  }
 }

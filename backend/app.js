@@ -441,6 +441,7 @@ app.put("/api/user/profil/:id", async (req, res) => {
             lastName: updateData.lastName,
             age: updateData.age,
             address: updateData.address,
+            phone: updateData.phone,
             speciality: updateData.speciality, // Champ spécifique à Teacher
             experience: updateData.experience, // Champ spécifique à Teacher
           },
@@ -449,12 +450,20 @@ app.put("/api/user/profil/:id", async (req, res) => {
         .select("-password");
     } else if (user.role === "student") {
       // Utilisez le modèle Student pour mettre à jour les champs spécifiques à un étudiant
+      console.log("hhhhhhhhhh");
       updatedUser = await mongoose
-        .model("Student")
-        .findByIdAndUpdate(userId, updateData, {
-          new: true,
-          runValidators: true,
-        })
+        .model("student")
+        .findByIdAndUpdate(
+          userId,
+          {
+            firstName: updateData.firstName,
+            lastName: updateData.lastName,
+            age: updateData.age,
+            address: updateData.address,
+            phone: updateData.phone,
+          },
+          { new: true, runValidators: true }
+        )
         .select("-password");
     } else {
       // Sinon, mettre à jour l'utilisateur générique
@@ -749,6 +758,61 @@ app.put(
     }
   }
 );
+app.get("/api/students/students/:studentId/courses", async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    const student = await Student.findById(studentId)
+      .populate("courses", "title description price duration")
+      .populate({
+        path: "grades",
+        select: "title",
+      });
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    res.status(200).json({
+      courses: student.courses,
+      grades: student.grades,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching student courses and grades", error });
+  }
+});
+
+// GET: Fetch children for a specific parent
+app.get("/api/parents/:parentId/children", async (req, res) => {
+  const { parentId } = req.params;
+  try {
+    // Fetch parent and populate children, courses, and grades
+    const parent = await Parent.findById(parentId)
+      .populate({
+        path: "children",
+        populate: {
+          path: "courses",
+          select: "title description duration teacher",
+        },
+      })
+
+      .populate({
+        path: "children",
+        populate: { path: "grades.course", select: "title" },
+      });
+
+    if (!parent) {
+      return res.status(404).json({ message: "Parent not found" });
+    }
+
+    res.status(200).json({ children: parent.children });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching children", error });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

@@ -45,6 +45,8 @@ import { StudentsTabComponent } from './students-tab/students-tab.component';
 import { ParentsTabComponent } from './parents-tab/parents-tab.component';
 import { EnrollStudentComponent } from './enroll-student/enroll-student.component';
 import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
+import { DashboardStudentComponent } from './dashboard-student/dashboard-student.component';
+import { DashboardParentComponent } from './dashboard-parent/dashboard-parent.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,10 @@ import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard
     StudentsTabComponent,
     ParentsTabComponent,
     EnrollStudentComponent,
-    TeacherDashboardComponent
+    TeacherDashboardComponent,
+    DashboardStudentComponent,
+    DashboardParentComponent,
+   
   ],
   imports: [
     BrowserModule,

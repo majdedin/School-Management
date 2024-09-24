@@ -12,6 +12,7 @@ const usersSchema = mongoose.Schema(
     confirmPassword: String,
     role: String,
     path: String,
+    phone: { type: String },
   },
   { discriminatorKey: "role", timestamps: true }
 );

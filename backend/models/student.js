@@ -6,7 +6,7 @@ const studentSchema = new mongoose.Schema({
   courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "course" }],
   grades: [
     {
-      course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+      course: { type: mongoose.Schema.Types.ObjectId, ref: "course" },
       grade: Number,
     },
   ],

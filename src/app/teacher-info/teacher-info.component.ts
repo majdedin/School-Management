@@ -25,6 +25,14 @@ export class TeacherInfoComponent implements OnInit {
     });
   }
   goBack() {
-    this.router.navigate(['/admin']);  // Navigate back to the admin panel
+    const connectedUser = localStorage.getItem('connectedeUser');
+    const role = connectedUser ? JSON.parse(connectedUser).role : '';
+    if(role=="admin"){
+      this.router.navigate(['/admin']);  // Navigate back to the admin panel
+    }
+    if(role=="parent"){
+      this.router.navigate(['/parent']);  // Navigate back to the admin panel
+    }
+   
   }
 }

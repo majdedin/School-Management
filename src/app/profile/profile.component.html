@@ -1,95 +1,101 @@
 <div class="container mt-5">
-    <h2 class="text-center">Profile</h2>
-  
-    <div class="card mt-3">
-      <div class="card-body">
-        <h4 class="card-title">User Information</h4>
-        
-        <!-- Affichage des données quand on n'est pas en mode édition -->
-        <form [formGroup]="profileForm" *ngIf="!editMode">
-          <p><strong>First Name: </strong>{{ user?.firstName }}</p>
-          <p><strong>Last Name: </strong>{{ user?.lastName }}</p>
-          <p><strong>Email: </strong>{{ user?.email }}</p>
-          <p><strong>Role: </strong>{{ user?.role }}</p>
-          <p><strong>Age: </strong>{{ user?.age }}</p>
-          <p><strong>Address: </strong>{{ user?.address }}</p>
+  <h2 class="text-center">Profile</h2>
 
-          <!-- Afficher les informations spécifiques au rôle -->
-          <div *ngIf="role === 'Teacher'">
-            <p><strong>Speciality: </strong>{{ user?.speciality }}</p>
-            <p><strong>Experience: </strong>{{ user?.experience }} years</p>
-          </div>
+  <div class="card mt-3">
+    <div class="card-body">
+      <h4 class="card-title">User Information</h4>
 
-          <div *ngIf="role === 'Student'">
-            <p><strong>Courses: </strong>{{ user?.courses.length }} courses enrolled</p>
-            <p *ngFor="let course of user?.courses">- {{ course.name }}</p>
-          </div>
+      <!-- Display mode -->
+      <form [formGroup]="profileForm" *ngIf="!editMode">
+        <p><strong>First Name: </strong>{{ user?.firstName }}</p>
+        <p><strong>Last Name: </strong>{{ user?.lastName }}</p>
+        <p><strong>Email: </strong>{{ user?.email }}</p>
+        <p><strong>Phone: </strong>{{ user?.phone }}</p> <!-- New phone field -->
+        <p><strong>Role: </strong>{{ user?.role }}</p>
+        <p><strong>Age: </strong>{{ user?.age }}</p>
+        <p><strong>Address: </strong>{{ user?.address }}</p>
 
-          <div *ngIf="role === 'Parent'">
-            <p><strong>Children: </strong>{{ user?.children.length }} children</p>
-            <p *ngFor="let child of user?.children">- {{ child.firstName }} {{ child.lastName }}</p>
-          </div>
-        </form>
-  
-        <!-- Formulaire en mode édition -->
-        <form [formGroup]="profileForm" *ngIf="editMode">
+        <!-- Display role-specific fields -->
+        <div *ngIf="role === 'Teacher'">
+          <p><strong>Speciality: </strong>{{ user?.speciality }}</p>
+          <p><strong>Experience: </strong>{{ user?.experience }} years</p>
+        </div>
+
+        <div *ngIf="role === 'Student'">
+          <p><strong>Courses: </strong>{{ user?.courses.length }} courses enrolled</p>
+          <p *ngFor="let course of user?.courses">- {{ course.name }}</p>
+        </div>
+
+        <div *ngIf="role === 'Parent'">
+          <p><strong>Children: </strong>{{ user?.children.length }} children</p>
+          <p *ngFor="let child of user?.children">- {{ child.firstName }} {{ child.lastName }}</p>
+        </div>
+      </form>
+
+      <!-- Edit mode -->
+      <form [formGroup]="profileForm" *ngIf="editMode">
+        <div class="form-group">
+          <label for="firstName">First Name:</label>
+          <input formControlName="firstName" class="form-control" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name:</label>
+          <input formControlName="lastName" class="form-control" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input formControlName="email" class="form-control" type="email" />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone:</label> <!-- New phone input -->
+          <input formControlName="phone" class="form-control" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age:</label>
+          <input formControlName="age" class="form-control" type="number" />
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input formControlName="address" class="form-control" type="text" />
+        </div>
+
+        <!-- Role-specific fields for Teacher -->
+        <div *ngIf="role === 'teacher'">
           <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <input formControlName="firstName" class="form-control" type="text" />
-          </div>
-  
-          <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <input formControlName="lastName" class="form-control" type="text" />
-          </div>
-  
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input formControlName="email" class="form-control" type="email" />
-          </div>
-  
-          <div class="form-group">
-            <label for="age">Age:</label>
-            <input formControlName="age" class="form-control" type="number" />
-          </div>
-  
-          <div class="form-group">
-            <label for="address">Address:</label>
-            <input formControlName="address" class="form-control" type="text" />
+            <label for="speciality">Speciality:</label>
+            <select formControlName="speciality" class="form-control">
+              <option value="" disabled>Select Speciality</option>
+              <option value="networking">Networking</option>
+              <option value="development">Development</option>
+              <option value="project management">Project Management</option>
+            </select>
           </div>
 
-          <!-- Champs spécifiques au rôle Teacher -->
-          <div *ngIf="role === 'teacher'">
-            <div class="form-group">
-                <label for="speciality">Speciality:</label>
-                <select formControlName="speciality" class="form-control">
-                    <option value="" disabled>Select Speciality</option>
-                    <option value="networking">Networking</option>
-                    <option value="development">Development</option>
-                    <option value="project management">Project Management</option>
-                </select>
-            </div>
-  
-            <div class="form-group">
-              <label for="experience">Experience (in years):</label>
-              <input formControlName="experience" class="form-control" type="number" />
-            </div>
+          <div class="form-group">
+            <label for="experience">Experience (in years):</label>
+            <input formControlName="experience" class="form-control" type="number" />
           </div>
+        </div>
 
-          <!-- Champs spécifiques au rôle Student -->
-          <div *ngIf="role === 'student'">
-            <p>Student can't modify courses directly.</p>
-          </div>
+        <!-- Role-specific fields for Student -->
+        <div *ngIf="role === 'student'">
+          <p>Student can't modify courses directly.</p>
+        </div>
 
-          <!-- Champs spécifiques au rôle Parent -->
-          <div *ngIf="role === 'parent'">
-            <p>Parent can't modify children's information directly.</p>
-          </div>
-        </form>
-      </div>
+        <!-- Role-specific fields for Parent -->
+        <div *ngIf="role === 'parent'">
+          <p>Parent can't modify children's information directly.</p>
+        </div>
+      </form>
     </div>
-  
-    <button *ngIf="!editMode" class="btn btn-primary mt-3" (click)="editProfile()">Edit Profile</button>
-    <button *ngIf="editMode" class="btn btn-success mt-3" (click)="saveProfile()">Save</button>
-    <button *ngIf="editMode" class="btn btn-secondary mt-3" (click)="cancelEdit()">Cancel</button>
+  </div>
+
+  <button *ngIf="!editMode" class="btn btn-primary mt-3" (click)="editProfile()">Edit Profile</button>
+  <button *ngIf="editMode" class="btn btn-success mt-3" (click)="saveProfile()">Save</button>
+  <button *ngIf="editMode" class="btn btn-secondary mt-3" (click)="cancelEdit()">Cancel</button>
 </div>

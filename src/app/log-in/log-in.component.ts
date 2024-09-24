@@ -44,7 +44,15 @@ export class LogInComponent implements OnInit {
            (decoded.role == "teacher") {
             this.router.navigate(['teacher'])
           
-        }
+        }else if 
+        (decoded.role == "student") {
+         this.router.navigate(['student'])
+       
+     }else if 
+     (decoded.role == "parent") {
+      this.router.navigate(['parent'])
+    
+  }
         else {
           this.router.navigate([''])
         }

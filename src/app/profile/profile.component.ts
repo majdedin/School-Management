@@ -41,6 +41,7 @@ export class ProfileComponent implements OnInit {
           role: [{ value: this.user.role, disabled: true }], // Le rôle ne doit pas être modifiable
           age: [this.user.age],
           address: [this.user.address],
+          phone: [this.user.phone],
           speciality: [this.user.speciality || ''], // Pour Teacher
           experience: [this.user.experience || ''], // Pour Teacher
           children: [this.user.children || []], // Pour Parent
