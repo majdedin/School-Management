@@ -26,6 +26,7 @@ import { EnrollStudentComponent } from './enroll-student/enroll-student.componen
 import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 import { DashboardStudentComponent } from './dashboard-student/dashboard-student.component';
 import { DashboardParentComponent } from './dashboard-parent/dashboard-parent.component';
+import { SignupSelectionComponent } from './signup-selection/signup-selection.component';
 
 const routes: Routes = [
   {path: 'Home',component:HomeComponent},
@@ -35,7 +36,7 @@ const routes: Routes = [
   {path: 'add-course',component:AddCourseComponent},
   {path: 'add-teacher',component:AddTeacherComponent},
   {path: 'admin',component:AdminComponent},
-  {path: 'SignUp',component:SignUpComponent},
+  {path: 'SignUp',component:SignupSelectionComponent },
   {path: 'inscription',component:SignUpComponent},
   {path: 'inscriptionParent',component:SignUpComponent},
   {path: 'inscriptionTeacher',component:SignUpComponent},

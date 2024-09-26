@@ -188,29 +188,49 @@ const Parent = require("./models/parent");
 app.post(
   "/api/user/signUp",
   multer({ storage: storageConfig }).single("img"),
-  (req, res) => {
-    //instructon
-    Users.findOne({ email: req.body.email }).then((response) => {
-      console.log("email", response);
-      if (!response) {
-        bcrypt.hash(req.body.pwd, 10).then((cryptedPwd) => {
-          console.log("Here crypted pwd", cryptedPwd);
-          req.body.pwd = cryptedPwd;
-          if (req.file) {
-            req.body.path = `http://localhost:3000/shortCut/${req.file.filename}`;
-          } else {
-            req.body.path = `http://localhost:3000/shortCut/avatar.png`;
-          }
-          let user = new Users(req.body);
-          user.save();
-          res.json({ isAdded: true });
-        });
-      } else {
-        res.json({ isAdded: false });
+  async (req, res) => {
+    try {
+      console.log(req.body);
+      const { email, role, phone, childPhone } = req.body;
+
+      const existingUser = await Users.findOne({ email });
+      if (existingUser) {
+        return res.json({ isAdded: false, message: "Email already exists" });
       }
-    });
+
+      let hashedPwd = await bcrypt.hash(req.body.pwd, 10);
+      req.body.pwd = hashedPwd;
+
+      if (req.file) {
+        req.body.path = `http://localhost:3000/shortCut/${req.file.filename}`;
+      } else {
+        req.body.path = `http://localhost:3000/shortCut/avatar.png`;
+      }
+
+      if (role === "parent") {
+        // Verify if child exists by phone number
+        const child = await Users.findOne({
+          phone: childPhone,
+          role: "student",
+        });
+        if (!child) {
+          console.log("Child not found");
+          return res.json({ isAdded: false, message: "Child not found" });
+        }
+        req.body.children = [child._id]; // Link parent to child
+      }
+
+      const newUser = new Users(req.body);
+      await newUser.save();
+      res.json({ isAdded: true, message: "User added successfully" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ isAdded: false, message: "Error signing up", error });
+    }
   }
 );
+
 // //*********************business Logics logIn**********/.
 app.post("/api/user/logIn", (req, res) => {
   Users.findOne({ email: req.body.email }).then((response) => {
@@ -276,7 +296,7 @@ app.post("/api/courses", async (req, res) => {
 });
 
 //business Logics: Edit course
-app.put("/api/course", (req, res) => {
+app.put("/api/courses", (req, res) => {
   //instruction
   console.log("here into BL:Edit course", req.body);
   Course.updateOne({ _id: req.body._id }, req.body).then((responseUpdate) => {

@@ -1,0 +1,41 @@
+<div class="container mt-5">
+    <h2 class="text-center">Choose Your Sign-Up Type</h2>
+    <div class="row justify-content-center">
+      <!-- Sign Up as Student Card -->
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+          <img class="card-img-top" src="assets/img/student.png" alt="Student Sign-Up">
+          <div class="card-body text-center">
+            <h5 class="card-title">Sign Up as a Student</h5>
+            <p class="card-text">Join our platform as a student and access various courses.</p>
+            <button class="btn btn-primary" (click)="navigateToSignUp('student')">Sign Up as Student</button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Sign Up as Parent Card -->
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+          <img class="card-img-top" src="assets/img/parent.jpg" alt="Parent Sign-Up">
+          <div class="card-body text-center">
+            <h5 class="card-title">Sign Up as a Parent</h5>
+            <p class="card-text">Manage your child's education by signing up as a parent.</p>
+            <button class="btn btn-primary" (click)="navigateToSignUp('parent')">Sign Up as Parent</button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Sign Up as Teacher Card -->
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100">
+          <img class="card-img-top" src="assets/img/teacher.png" alt="Teacher Sign-Up">
+          <div class="card-body text-center">
+            <h5 class="card-title">Sign Up as a Teacher</h5>
+            <p class="card-text">Join us as a teacher and start teaching your own courses.</p>
+            <button class="btn btn-primary" (click)="navigateToSignUp('teacher')">Sign Up as Teacher</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -3,107 +3,92 @@
         <div class="col-lg-4 text-center text-lg-left" style="margin-right: 15%;">
             <h1 class="display-3 font-weight-bold text-white">SignUp</h1>
             <form [formGroup]="signUpForm">
+                <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+                <!-- First Name -->
                 <div class="form-group">
-                    <label style="color: rgb(52, 48, 48);" for="exampleInputPassword1">First Name</label>
-                    <input formControlName="firstName" type="text" class="form-control" placeholder="first Name">
+                    <label style="color: rgb(52, 48, 48);" for="firstName">First Name</label>
+                    <input formControlName="firstName" type="text" class="form-control" placeholder="First Name">
                 </div>
-                <div *ngIf="
-                  signUpForm.controls['firstName'].invalid &&
-                  (signUpForm.controls['firstName'].touched || 
-                  signUpForm.controls['firstName'].dirty)">
-                    <div *ngIf="signUpForm.controls['firstName'].errors?.['required']">
-                        First Name is required
-                    </div>
-                    <div *ngIf="signUpForm.controls['firstName'].errors?.['minlength']">
-                        First Name must have at least 3 chars
-                    </div>
+                <!-- First Name Validation -->
+                <div *ngIf="signUpForm.controls['firstName'].invalid && (signUpForm.controls['firstName'].touched || signUpForm.controls['firstName'].dirty)">
+                    <div *ngIf="signUpForm.controls['firstName'].errors?.['required']">First Name is required</div>
+                    <div *ngIf="signUpForm.controls['firstName'].errors?.['minlength']">First Name must have at least 3 characters</div>
                 </div>
+
+                <!-- Last Name -->
                 <div class="form-group">
-                    <label style="color: rgb(52, 48, 48);" for="exampleInputPassword1">Last Name</label>
+                    <label style="color: rgb(52, 48, 48);" for="lastName">Last Name</label>
                     <input formControlName="lastName" type="text" class="form-control" placeholder="Last Name">
                 </div>
-                <div *ngIf="
-      signUpForm.controls['lastName'].invalid &&
-      (signUpForm.controls['lastName'].touched || 
-      signUpForm.controls['lastName'].dirty)">
-                    <div *ngIf="signUpForm.controls['lastName'].errors?.['required']">
-                        Last Name is required
-                    </div>
-                    <div *ngIf="signUpForm.controls['lastName'].errors?.['minlength']">
-                        Last Name must have at least 5 chars
-                    </div>
+                <!-- Last Name Validation -->
+                <div *ngIf="signUpForm.controls['lastName'].invalid && (signUpForm.controls['lastName'].touched || signUpForm.controls['lastName'].dirty)">
+                    <div *ngIf="signUpForm.controls['lastName'].errors?.['required']">Last Name is required</div>
+                    <div *ngIf="signUpForm.controls['lastName'].errors?.['minlength']">Last Name must have at least 5 characters</div>
                 </div>
+
+                <!-- Phone Number -->
                 <div class="form-group">
-                    <label style="color: rgb(52, 48, 48);" for="exampleInputPassword1">age</label>
-                    <input formControlName="age" type="number" class="form-control" placeholder="age">
+                    <label style="color: rgb(52, 48, 48);" for="phone">Phone</label>
+                    <input formControlName="phone" type="tel" class="form-control" placeholder="Phone">
                 </div>
-                <div *ngIf="
-                  signUpForm.controls['age'].invalid &&
-                  (signUpForm.controls['age'].touched || 
-                  signUpForm.controls['age'].dirty)">
-                    <div *ngIf="signUpForm.controls['age'].errors?.['required']">
-                        age is required
-                    </div>
+                <!-- Phone Validation -->
+                <div *ngIf="signUpForm.controls['phone'].invalid && (signUpForm.controls['phone'].touched || signUpForm.controls['phone'].dirty)">
+                    <div *ngIf="signUpForm.controls['phone'].errors?.['required']">Phone is required</div>
+                    <div *ngIf="signUpForm.controls['phone'].errors?.['pattern']">Invalid phone number format</div>
                 </div>
+
+                <!-- Conditional Phone Child for Parent -->
+                <div *ngIf="role=='parent'" class="form-group">
+                    <label style="color: rgb(52, 48, 48);" for="childPhone">Phone Child</label>
+                    <input formControlName="childPhone" type="tel" class="form-control" placeholder="Child Phone">
+                </div>
+
+                <!-- Age -->
                 <div class="form-group">
-                    <label style="color: rgb(52, 48, 48);" for="exampleInputEmail1">address</label>
-                    <input formControlName="address" type="text" class="form-control" placeholder="address">
+                    <label style="color: rgb(52, 48, 48);" for="age">Age</label>
+                    <input formControlName="age" type="number" class="form-control" placeholder="Age">
                 </div>
-                <div *ngIf="
-                  signUpForm.controls['address'].invalid &&
-                  (signUpForm.controls['address'].touched || 
-                  signUpForm.controls['address'].dirty)">
-                    <div *ngIf="signUpForm.controls['address'].errors?.['required']">
-                        address is required
-                    </div>
+                <div *ngIf="signUpForm.controls['age'].invalid && (signUpForm.controls['age'].touched || signUpForm.controls['age'].dirty)">
+                    <div *ngIf="signUpForm.controls['age'].errors?.['required']">Age is required</div>
                 </div>
 
+                <!-- Address -->
                 <div class="form-group">
-                    <label style="color: rgb(52, 48, 48);">email</label>
-                    <input formControlName="email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="email">
+                    <label style="color: rgb(52, 48, 48);" for="address">Address</label>
+                    <input formControlName="address" type="text" class="form-control" placeholder="Address">
                 </div>
-                <div *ngIf="
-                  signUpForm.controls['email'].invalid &&
-                  (signUpForm.controls['email'].touched || 
-                  signUpForm.controls['email'].dirty)">
-                    <div *ngIf="signUpForm.controls['email'].errors?.['required']">
-                        Email is required
-                    </div>
-                    <div *ngIf="signUpForm.controls['email'].errors?.['email']">
-                        Form Email invalid
-                    </div>
+                <div *ngIf="signUpForm.controls['address'].invalid && (signUpForm.controls['address'].touched || signUpForm.controls['address'].dirty)">
+                    <div *ngIf="signUpForm.controls['address'].errors?.['required']">Address is required</div>
                 </div>
 
+                <!-- Email -->
+                <div class="form-group">
+                    <label style="color: rgb(52, 48, 48);">Email</label>
+                    <input formControlName="email" type="email" class="form-control" placeholder="Email">
+                </div>
+                <div *ngIf="signUpForm.controls['email'].invalid && (signUpForm.controls['email'].touched || signUpForm.controls['email'].dirty)">
+                    <div *ngIf="signUpForm.controls['email'].errors?.['required']">Email is required</div>
+                    <div *ngIf="signUpForm.controls['email'].errors?.['email']">Invalid Email format</div>
+                </div>
 
-                <label style="color: rgb(52, 48, 48);font-size: small; " id="emailHelp" class=" ">We'll never
-          share
-          your
-          email with anyone else.</label>
-
+                <!-- Password -->
                 <div class="form-group">
                     <label style="color: rgb(52, 48, 48);">Password</label>
-                    <input formControlName="pwd" type="password" class="form-control" placeholder="password">
+                    <input formControlName="pwd" type="password" class="form-control" placeholder="Password">
                 </div>
-                <div *ngIf="
-                  signUpForm.controls['pwd'].invalid &&
-                  (signUpForm.controls['pwd'].touched || 
-                  signUpForm.controls['pwd'].dirty)">
-                    <div *ngIf="signUpForm.controls['pwd'].errors?.['required']">
-                        pwd is required
-                    </div>
-                    <div *ngIf="signUpForm.controls['pwd'].errors?.['minlength']">
-                        pwd must have at least 6
-                    </div>
-                    <div *ngIf="signUpForm.controls['pwd'].errors?.['maxlength']">
-                        pwd must have at least 7
-                    </div>
+                <div *ngIf="signUpForm.controls['pwd'].invalid && (signUpForm.controls['pwd'].touched || signUpForm.controls['pwd'].dirty)">
+                    <div *ngIf="signUpForm.controls['pwd'].errors?.['required']">Password is required</div>
+                    <div *ngIf="signUpForm.controls['pwd'].errors?.['minlength']">Password must be at least 6 characters</div>
                 </div>
+
+                <!-- Image Upload -->
                 <div class="text-center">
-                    <button type="button" (click)='filePicker.click()' class="btn btn-success">Sélectionner image</button>
+                    <button type="button" (click)="filePicker.click()" class="btn btn-success">Select Image</button>
                     <div class="form-group">
-                        <input style="visibility: hidden;" type="file" class="form-control" #filePicker (change)='onImageSelected($event)' />
+                        <input style="visibility: hidden;" type="file" #filePicker (change)="onImageSelected($event)" />
                     </div>
-                    <img [src]="imagePreview">
+                    <img [src]="imagePreview" *ngIf="imagePreview">
                     <button type="submit" (click)="signUp()" [disabled]="signUpForm.invalid" class="btn btn-secondary">SignUp</button>
                 </div>
             </form>

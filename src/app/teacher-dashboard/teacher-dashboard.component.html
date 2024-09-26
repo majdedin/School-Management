@@ -1,87 +1,105 @@
 <div class="container mt-5">
-    <h2 class="text-center">Teacher Dashboard</h2>
-  
-    <!-- Section for Adding Courses -->
-    <div class="row">
-      <div class="col-md-6">
-        <h3>Add Course</h3>
-        <form (ngSubmit)="addCourse()">
-          <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" class="form-control" [(ngModel)]="newCourse.title" name="title" required />
-          </div>
-          <div class="form-group">
-            <label for="description">Description:</label>
-            <input type="text" class="form-control" [(ngModel)]="newCourse.description" name="description" required />
-          </div>
-          <div class="form-group">
-            <label for="duration">Duration:</label>
-            <input type="text" class="form-control" [(ngModel)]="newCourse.duration" name="duration" required />
-          </div>
-          <div class="form-group">
-            <label for="price">Price:</label>
-            <input type="number" class="form-control" [(ngModel)]="newCourse.price" name="price" required />
-          </div>
-          <button type="submit" class="btn btn-primary">Add Course</button>
-        </form>
-      </div>
-    </div>
-  
-    <!-- Section for Viewing Courses -->
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <h3>My Courses</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Duration</th>
-              <th>Price</th>
-              <th>Students</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let course of courses">
-              <td>{{ course.title }}</td>
-              <td>{{ course.description }}</td>
-              <td>{{ course.duration }}</td>
-              <td>${{ course.price }}</td>
-              <td>
-                <button class="btn btn-info" (click)="viewStudents(course._id)">View Students</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- Section for Viewing Students and Assigning Grades -->
-    <div class="row mt-5" *ngIf="selectedCourseStudents.length > 0">
-        <div class="col-md-12">
-          <h3>Students in {{ selectedCourseTitle }}</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Grade</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let student of selectedCourseStudents">
-                <td>{{ student.firstName }} {{ student.lastName }}</td>
-                <td>
-                  <input [(ngModel)]="student.grade" type="number" placeholder="Enter grade" />
-                </td>
-                <td>
-                  <button class="btn btn-success" (click)="assignGrade(student._id, student.grade)">Assign Grade</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+  <h2 class="text-center">Teacher Dashboard</h2>
+
+  <!-- Section for Adding Courses -->
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Add Course</h3>
+      <form (ngSubmit)="addCourse()">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" class="form-control" [(ngModel)]="newCourse.title" name="title" required />
         </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <input type="text" class="form-control" [(ngModel)]="newCourse.description" name="description" required />
+        </div>
+        <div class="form-group">
+          <label for="duration">Duration:</label>
+          <input type="text" class="form-control" [(ngModel)]="newCourse.duration" name="duration" required />
+        </div>
+        <div class="form-group">
+          <label for="ageOfKids">Age Range</label>
+          <input 
+              type="text" 
+              id="ageOfKids" 
+              [(ngModel)]="newCourse.ageOfKids" 
+              name="ageOfKids" 
+              [ngModelOptions]="{standalone:true}" 
+              class="form-control" 
+              placeholder="Enter age range (e.g., 6-10 years)"
+              required
+          >
+        
       </div>
-      
+        <div class="form-group">
+          <label for="price">Price:</label>
+          <input type="number" class="form-control" [(ngModel)]="newCourse.price" name="price" required />
+        </div>
+      <button *ngIf="!editingCourse" type="submit" class="btn btn-primary">Add Course</button>
+        <button *ngIf="editingCourse" type="submit" class="btn btn-primary">Edit Course</button>
+      </form>
+    </div>
   </div>
-  
+
+  <!-- Section for Viewing Courses -->
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h3>My Courses</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Students</th>
+            <th>Actions</th> <!-- New column for actions -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of courses">
+            <td>{{ course.title }}</td>
+            <td>{{ course.description }}</td>
+            <td>{{ course.duration }}</td>
+            <td>${{ course.price }}</td>
+            <td>
+              <button class="btn btn-info" (click)="viewStudents(course._id)">View Students</button>
+            </td>
+            <td>
+              <button class="btn btn-warning" (click)="editCourse(course)">Edit</button>
+              <button class="btn btn-danger" (click)="deleteCourse(course._id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section for Viewing Students and Assigning Grades -->
+  <div class="row mt-5" *ngIf="selectedCourseStudents.length > 0">
+    <div class="col-md-12">
+      <h3>Students in {{ selectedCourseTitle }}</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Grade</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of selectedCourseStudents">
+            <td>{{ student.firstName }} {{ student.lastName }}</td>
+            <td>
+              <input [(ngModel)]="student.grade" type="number" placeholder="Enter grade" />
+            </td>
+            <td>
+              <button class="btn btn-success" (click)="assignGrade(student._id, student.grade)">Assign Grade</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

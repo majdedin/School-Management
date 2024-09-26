@@ -17,6 +17,11 @@ export class UserService {
     fData.append("email",user.email);
     fData.append("pwd",user.pwd);
     fData.append("role",user.role);
+    fData.append("phone",user.phone);
+    if(user.role="parent"){
+      fData.append("childPhone",user.childPhone);
+    }
+    
     fData.append("img",photo);
     return this.http.post<{ isAdded: boolean }>(this.userUrl + '/signUp', fData);
   }

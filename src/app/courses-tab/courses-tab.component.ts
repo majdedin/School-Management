@@ -27,7 +27,7 @@ export class CoursesTabComponent implements OnInit {
   }
 
   goToEdit(courseId: string): void {
-    this.router.navigate(['/edit-course', courseId]);
+    this.router.navigate(['/edit-courses', courseId]);
   }
 
   goToInfo(courseId: string): void {

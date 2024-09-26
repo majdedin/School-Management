@@ -12,12 +12,16 @@ export class TeacherDashboardComponent implements OnInit {
     title: '',
     description: '',
     duration: '',
+    ageOfKids:null,
     price: null
   };
+  editingCourse: any = null; // Holds the course being edited
   courses: any[] = [];
+
   selectedCourseStudents: any[] = [];
   selectedCourseTitle = '';
 selctedCourseId: any;
+
   constructor(private teacherService: TeachersService, private courseService: CoursesService) {}
 
   ngOnInit(): void {
@@ -37,8 +41,17 @@ selctedCourseId: any;
     );
   }
 
-  addCourse(): void {
-    const connectedUser = localStorage.getItem('connectedeUser');
+
+  addCourse() {
+    if (this.editingCourse) {
+      // If editing, update the course
+      console.log(this.newCourse)
+      this.courseService.editcourse(this.newCourse).subscribe(() => {
+        this.loadTeacherCourses();
+        this.resetForm();
+      });
+    } else {
+      const connectedUser = localStorage.getItem('connectedeUser');
     const teacherId = connectedUser ? JSON.parse(connectedUser).id : '';    this.teacherService.addCourse(teacherId, this.newCourse).subscribe(
       (response) => {
         console.log('Course added successfully', response);
@@ -48,7 +61,9 @@ selctedCourseId: any;
         console.error('Error adding course', error);
       }
     );
+    }
   }
+
 
   viewStudents(courseId: string): void {
     this.selctedCourseId=courseId
@@ -84,4 +99,28 @@ selctedCourseId: any;
       }
     );
   }
+  resetForm() {
+    this.newCourse = {
+      title: '',
+      description: '',
+      duration: '',
+      ageOfKids:null,
+      price: null
+    };
+    this.editingCourse = null;
+  }
+    // Edit a course (populate form with course data)
+    editCourse(course: any) {
+      this.editingCourse = course;
+      this.newCourse = { ...course }; // Copy course data into the form
+    }
+  
+    // Delete a course
+    deleteCourse(courseId: string) {
+      if (confirm('Are you sure you want to delete this course?')) {
+        this.courseService.deletecourse(courseId).subscribe(() => {
+          this.loadTeacherCourses();
+        });
+      }
+    }
 }
