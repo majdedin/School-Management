@@ -39,4 +39,12 @@ export class TeachersTabComponent implements OnInit {
       this.loadTeachers();  // Reload the teachers list after deletion
     });
   }
+  validateTeacher(teacherId: string): void {
+    this.teachersService.validateTeacher(teacherId).subscribe(response => {
+      alert('Teacher validated successfully!');
+      this.loadTeachers(); // Refresh the list to show updated status
+    }, error => {
+      console.error('Error validating teacher', error);
+    });
+  }
 }

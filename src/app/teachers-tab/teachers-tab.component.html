@@ -12,6 +12,7 @@
         <th>Name</th>
         <th>Speciality</th>
         <th>Experience</th>
+        <th>Status</th> 
         <th>Actions</th>
       </tr>
     </thead>
@@ -22,7 +23,9 @@
   
         <td>{{teacher.speciality}}</td>
         <td>{{teacher.experience}}</td>
+        <td>{{teacher.status}}</td> 
         <td>
+          <button class="btn btn-info mr-2" (click)="validateTeacher(teacher._id)" [disabled]="teacher.status === 'validated'">Validate</button> <!-- Add Validate Button -->
           <button class="btn btn-success mr-2" (click)="display(teacher._id)">Display</button>
           <button class="btn btn-primary mr-2" (click)="editTeacher(teacher._id)">Edit</button>
           <button class="btn btn-danger" (click)="deleteTeacher(teacher._id)">Delete</button>

@@ -755,9 +755,10 @@ app.put(
   "/api/courses/students/:courseId/:studentId/grade",
   async (req, res) => {
     try {
+      console.log(req.body);
       console.log("heeeerrree");
       const { courseId, studentId } = req.params;
-      const { grade } = req.body;
+      const { gradeData } = req.body;
 
       // Find the student and update their grade for the course
       const student = await Student.findById(studentId);
@@ -766,9 +767,14 @@ app.put(
       );
 
       if (courseGrade) {
-        courseGrade.grade = grade; // Update grade
+        courseGrade.grade = gradeData.grade;
+        courseGrade.evaluation = gradeData.evaluation;
       } else {
-        student.grades.push({ course: courseId, grade });
+        student.grades.push({
+          course: courseId,
+          grade: gradeData.grade,
+          evaluation: gradeData.evaluation,
+        });
       }
 
       await student.save();
@@ -831,6 +837,31 @@ app.get("/api/parents/:parentId/children", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error fetching children", error });
+  }
+});
+
+// API to validate a teacher
+app.put("/api/teacher/:id/validate", async (req, res) => {
+  try {
+    const teacherId = req.params.id;
+
+    // Find the teacher and update their status
+    const updatedTeacher = await Teacher.findByIdAndUpdate(
+      teacherId,
+      { status: "validated" }, // Update status to validated
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTeacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+
+    res.status(200).json({
+      message: "Teacher validated successfully",
+      teacher: updatedTeacher,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error validating teacher", error });
   }
 });
 

@@ -24,8 +24,9 @@ export class CoursesService {
       return this.http.get(`${this.courseUrl}/${courseId}/students`);
     }
   
-    assignGrade(studentId: any, courseId:   any,grade: number): Observable<any> {
-      return this.http.put(`${this.courseUrl}/students/${courseId}/${studentId}/grade`, { grade });
+    assignGrade(studentId: any, courseId:   any, gradeData: { grade: number, evaluation: string }): Observable<any> {
+      return this.http.put(`${this.courseUrl}/students/${courseId}/${studentId}/grade`, { gradeData });
     }
+   
 
 }

@@ -17,7 +17,7 @@ export class TeacherDashboardComponent implements OnInit {
   };
   editingCourse: any = null; // Holds the course being edited
   courses: any[] = [];
-
+  teacher: any;
   selectedCourseStudents: any[] = [];
   selectedCourseTitle = '';
 selctedCourseId: any;
@@ -26,8 +26,16 @@ selctedCourseId: any;
 
   ngOnInit(): void {
     this.loadTeacherCourses();
+    this.loadTeacher();
   }
 
+  loadTeacher(): void {
+    const connectedUser = localStorage.getItem('connectedeUser');
+    const teacherId = connectedUser ? JSON.parse(connectedUser).id : '';
+    this.teacherService.getteacherById(teacherId).subscribe((data: any) => {
+      this.teacher = data.teacher;
+    });
+  }
   loadTeacherCourses(): void {
     const connectedUser = localStorage.getItem('connectedeUser');
       const teacherId = connectedUser ? JSON.parse(connectedUser).id : '';
@@ -74,7 +82,8 @@ selctedCourseId: any;
           const courseGrade = student.grades.find((grade:any) => grade.course.toString() === courseId);
           return {
             ...student,
-            grade: courseGrade ? courseGrade.grade : null // Set grade if exists
+            grade: courseGrade ? courseGrade.grade : null ,// Set grade if exists
+            evaluation: courseGrade ? courseGrade.evaluation : null // Set grade if exists
           };
         });
         this.selectedCourseTitle = this.courses.find(course => course._id === courseId).title;
@@ -85,20 +94,14 @@ selctedCourseId: any;
     )
   }
 
-  assignGrade(studentId: string, grade: number): void {
-    if (!grade || grade <= 0) {
-      alert('Please enter a valid grade');
-      return;
-    }
-    this.courseService.assignGrade(studentId,this.selctedCourseId, grade).subscribe(
-      (response) => {
-        console.log('Grade assigned successfully');
-      },
-      (error) => {
-        console.error('Error assigning grade', error);
-      }
-    );
+  assignGradeAndEvaluation(studentId: string,  grade: number, evaluation: string): void {
+    // Update student's grade and evaluation
+    this.courseService.assignGrade(studentId, this.selctedCourseId, { grade, evaluation })
+      .subscribe(() => {
+        console.log('Grade and evaluation assigned successfully');
+      });
   }
+  
   resetForm() {
     this.newCourse = {
       title: '',
@@ -123,4 +126,5 @@ selctedCourseId: any;
         });
       }
     }
+    
 }

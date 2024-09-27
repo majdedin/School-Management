@@ -26,5 +26,8 @@ export class TeachersService {
     addCourse(teacherId: any, course: any): Observable<any> {
       return this.http.post(`${this.teacherUrl}/${teacherId}/courses`, course);
     }
+    validateTeacher(teacherId: any): Observable<any> {
+      return this.http.put(`${this.teacherUrl}/${teacherId}/validate`, {});
+    }
     
 }
