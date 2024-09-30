@@ -4,10 +4,13 @@ const express = require("express");
 
 //import body parser module
 const bodyParser = require("body-parser");
+///import bib FS
+const fs = require("fs");
 //*********************Importation:mongoose***********************/
 const mongoose = require("mongoose");
 //EducationDB=>data base name
 const cors = require("cors");
+
 
 try {
   mongoose.connect("mongodb://127.0.0.1:27017/educationDB", {
@@ -68,7 +71,22 @@ const MIME_TYPE = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/jpg": "jpg",
+  pdf: "application/pdf",
 };
+
+app.get("/static-images/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const resolvedFilePath = path.join(__dirname, "photos", filename);
+
+  fs.access(resolvedFilePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error(`File not found: ${resolvedFilePath}`);
+      return res.status(404).send("Image not found");
+    }
+    res.sendFile(resolvedFilePath);
+  });
+})
+
 
 const storageConfig = multer.diskStorage({
   // destination
@@ -187,8 +205,9 @@ const Parent = require("./models/parent");
 // //*********************business Logics signup user**********/.
 app.post(
   "/api/user/signUp",
-  multer({ storage: storageConfig }).single("img"),
+  multer({ storage: storageConfig }).single("pdf"),
   async (req, res) => {
+    
     try {
       console.log(req.body);
       const { email, role, phone, childPhone } = req.body;
@@ -203,10 +222,8 @@ app.post(
 
       if (req.file) {
         req.body.path = `http://localhost:3000/shortCut/${req.file.filename}`;
-      } else {
-        req.body.path = `http://localhost:3000/shortCut/avatar.png`;
-      }
-
+        req.body.resume = `http://localhost:3000/shortCut/${req.file.filename}`;
+      } 
       if (role === "parent") {
         // Verify if child exists by phone number
         const child = await Users.findOne({
@@ -865,10 +882,6 @@ app.put("/api/teacher/:id/validate", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-app.listen(3000, () => {
-  console.log("Le serveur écoute sur le port 3000");
-});
+
+
 module.exports = app;

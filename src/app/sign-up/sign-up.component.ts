@@ -14,6 +14,7 @@ export class SignUpComponent implements OnInit {
   actualPath: any;
   imagePreview: any;
   selectedFile: any;
+  selectedResume: any;
   role: any;
   errorMessage: string = '';  // Add this line
 
@@ -45,6 +46,7 @@ export class SignUpComponent implements OnInit {
     } else {
       this.role = 'admin';
     }
+
   }
 
   signUp(): void {
@@ -58,7 +60,7 @@ export class SignUpComponent implements OnInit {
       this.signUpForm.value.role = 'admin';
     }
 
-    this.userService.signUp(this.signUpForm.value, this.selectedFile).subscribe(
+    this.userService.signUp(this.signUpForm.value, this.selectedFile, this.selectedResume).subscribe(
       (result: any) => {
         if (result.isAdded) {
           this.router.navigate(['Login']);
@@ -85,4 +87,31 @@ export class SignUpComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+  onIPdfSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    
+    if (fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      this.selectedResume=file
+  
+      // Ensure it's a PDF
+      if (file.type === 'application/pdf') {
+        // Handle file uploading logic here, e.g., sending it to a server
+        const reader = new FileReader();
+        
+        reader.onload = () => {
+          // Perform any actions you need with the file content
+          console.log('PDF content:', reader.result);
+          // You can display a preview or take further actions based on the PDF content
+        };
+  
+        reader.readAsArrayBuffer(file); // Read the PDF file
+  
+      } else {
+        console.error('Selected file is not a PDF.');
+        // Optionally, you could show a validation message
+      }
+    }
+  }
+  
 }

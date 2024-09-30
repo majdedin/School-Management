@@ -28,7 +28,8 @@ console.log(data.grades)
         );
         return {
           course,
-          grade: gradeObj ? gradeObj.grade : "No grade yet"
+          grade: gradeObj ? gradeObj.grade : "No grade yet",
+          evaluation: gradeObj ? gradeObj.evaluation : "No grade yet"
         };
       });
       

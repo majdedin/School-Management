@@ -89,6 +89,13 @@
                         <input style="visibility: hidden;" type="file" #filePicker (change)="onImageSelected($event)" />
                     </div>
                     <img [src]="imagePreview" *ngIf="imagePreview">
+                </div>
+                <!-- rsume UL-->
+                <div *ngIf="role=='teacher'" class="text-center">
+                    <button type="button" (click)="filePicker.click()" class="btn btn-success">Select resume</button>
+                    <div class="form-group">
+                        <input style="visibility: hidden;" type="file" #filePicker (change)="onIPdfSelected($event)" />
+                    </div>
                     <button type="submit" (click)="signUp()" [disabled]="signUpForm.invalid" class="btn btn-secondary">SignUp</button>
                 </div>
             </form>

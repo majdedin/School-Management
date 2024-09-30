@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const teacherSchema = mongoose.Schema({
   speciality: String,
   experience: Number,
+  resume:String,
   status: { type: String, default: "not validate" }, // Add status field with default value
 });
 //affect name to matchSchema

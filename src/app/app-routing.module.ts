@@ -40,6 +40,7 @@ const routes: Routes = [
   {path: 'inscription',component:SignUpComponent},
   {path: 'inscriptionParent',component:SignUpComponent},
   {path: 'inscriptionTeacher',component:SignUpComponent},
+  {path: 'signupAdmin',component:SignUpComponent},
   {path: 'Login',component:LogInComponent},
   {path: 'searchCourse',component:SearchCourseComponent},
   {path: 'Universities',component:UniversitiesComponent},

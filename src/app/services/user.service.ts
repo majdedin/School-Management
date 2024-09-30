@@ -10,7 +10,7 @@ export class UserService {
   userProfilUrl: string = 'http://localhost:3000/api/user/profil';
   constructor(private http: HttpClient) { }
 
-  signUp(user: any , photo:File) {
+  signUp(user: any , photo:File, resume:File) {
     let fData = new FormData();
     fData.append("firstName",user.firstName);
     fData.append("lastName",user.lastName);
@@ -23,6 +23,7 @@ export class UserService {
     }
     
     fData.append("img",photo);
+    fData.append("pdf",resume);
     return this.http.post<{ isAdded: boolean }>(this.userUrl + '/signUp', fData);
   }
 
