@@ -11,8 +11,11 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
   user: any;
   profileForm!: FormGroup;
-  editMode: boolean = false; // Mode d'édition activé/désactivé
-  role: string = ''; // Pour stocker le rôle de l'utilisateur connecté
+  editMode: boolean = false; 
+  role: string = ''; 
+  selectedResume: File | null = null; 
+  selectedFile: File | null = null; 
+  imagePreview: any;
 
   constructor(
     private userService: UserService,
@@ -61,16 +64,24 @@ export class ProfileComponent implements OnInit {
 
   saveProfile(): void {
     if (this.profileForm.valid) {
-      const updatedData = this.profileForm.value;
-      const connectedUser = localStorage.getItem('connectedeUser');
-      const userId = connectedUser ? JSON.parse(connectedUser).id : '';
-
-      // Appeler le service pour mettre à jour le profil avec l'ID utilisateur
-      this.userService.updateUserProfile(userId, updatedData).subscribe(
+      const formData = new FormData();
+      Object.keys(this.profileForm.value).forEach((key) => {
+        formData.append(key, this.profileForm.value[key]);
+      });
+  
+      // Append the selected image and resume files if available
+      if (this.selectedFile) {
+        formData.append('img', this.selectedFile);
+      }
+      if (this.selectedResume) {
+        formData.append('pdf', this.selectedResume);
+      }
+  
+      this.userService.updateUserProfile(this.user._id, formData).subscribe(
         (response) => {
-          console.log('Profile updated successfully', response);
-          this.editMode = false;  // Désactiver le mode édition
-          this.loadUserProfile();  // Recharger les données du profil mises à jour
+          console.log('Profile updated successfully');
+          this.editMode = false;
+          this.loadUserProfile(); // Reload the updated profile
         },
         (error) => {
           console.error('Error updating profile', error);
@@ -78,7 +89,29 @@ export class ProfileComponent implements OnInit {
       );
     }
   }
-
+  onImageSelected(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.files && inputElement.files.length > 0) {
+      const file = inputElement.files[0];
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  onResumeSelected(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      if (file.type === 'application/pdf') {
+        this.selectedResume = file;
+      } else {
+        console.error('Selected file is not a PDF.');
+      }
+    }
+  }
   cancelEdit(): void {
     this.editMode = false;
     this.loadUserProfile(); // Recharger les données sans modification

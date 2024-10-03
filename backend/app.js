@@ -11,7 +11,6 @@ const mongoose = require("mongoose");
 //EducationDB=>data base name
 const cors = require("cors");
 
-
 try {
   mongoose.connect("mongodb://127.0.0.1:27017/educationDB", {
     useNewUrlParser: true,
@@ -65,18 +64,13 @@ app.use((req, res, next) => {
   );
   next();
 });
-//img configuration
-app.use("/shortCut", express.static(path.join("backend/photos")));
-const MIME_TYPE = {
-  "image/png": "png",
-  "image/jpeg": "jpg",
-  "image/jpg": "jpg",
-  pdf: "application/pdf",
-};
 
 app.get("/static-images/:filename", (req, res) => {
   const filename = req.params.filename;
-  const resolvedFilePath = path.join(__dirname, "photos", filename);
+  const uploadsDir = path.join(__dirname, "backend/uploads");
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
 
   fs.access(resolvedFilePath, fs.constants.F_OK, (err) => {
     if (err) {
@@ -85,24 +79,10 @@ app.get("/static-images/:filename", (req, res) => {
     }
     res.sendFile(resolvedFilePath);
   });
-})
-
-
-const storageConfig = multer.diskStorage({
-  // destination
-  destination: (req, file, cb) => {
-    const isValid = MIME_TYPE[file.mimetype];
-    if (isValid) {
-      cb(null, "backend/photos");
-    }
-  },
-  filename: (req, file, cb) => {
-    const name = file.originalname.toLowerCase().split(" ").join("-");
-    const extension = MIME_TYPE[file.mimetype];
-    const imgName = name + "-" + Date.now() + "-crococoder-" + "." + extension;
-    cb(null, imgName);
-  },
 });
+
+// Configuring multer disk storage
+
 //************secret key configuration
 const secretKey = "your secret key";
 app.use(
@@ -203,29 +183,79 @@ const Parent = require("./models/parent");
 //     return max + 1;
 // }
 // //*********************business Logics signup user**********/.
+// Multer setup to accept image and PDF files
+
+// Signup route to handle user registration
+
+const MIME_TYPE = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "application/pdf": "pdf",
+};
+
+// Directory for file uploads
+const uploadDirectory = path.join(__dirname, "uploads");
+
+// Check if the directory exists, if not create it
+if (!fs.existsSync(uploadDirectory)) {
+  fs.mkdirSync(uploadDirectory, { recursive: true });
+}
+
+app.use("/uploads", express.static(path.join("uploads")));
+// Update the storage configuration for multer
+const storageConfig = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE[file.mimetype];
+    if (isValid) {
+      cb(null, uploadDirectory); // Save both PDFs and images in the same folder
+    } else {
+      cb(new Error("Invalid MIME type"), false);
+    }
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname.toLowerCase().split(" ").join("-");
+    const extension = MIME_TYPE[file.mimetype];
+    const fileName = name + "-" + Date.now() + "-crococoder." + extension;
+    cb(null, fileName);
+  },
+});
+const upload = multer({ storage: storageConfig });
+
 app.post(
   "/api/user/signUp",
-  multer({ storage: storageConfig }).single("pdf"),
+  upload.fields([
+    { name: "img", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
   async (req, res) => {
-    
     try {
       console.log(req.body);
-      const { email, role, phone, childPhone } = req.body;
+      const { firstName, lastName, age, email, role, phone, childPhone } =
+        req.body;
 
+      // Check if the user already exists
       const existingUser = await Users.findOne({ email });
       if (existingUser) {
         return res.json({ isAdded: false, message: "Email already exists" });
       }
 
+      // Hash the password
       let hashedPwd = await bcrypt.hash(req.body.pwd, 10);
       req.body.pwd = hashedPwd;
 
-      if (req.file) {
-        req.body.path = `http://localhost:3000/shortCut/${req.file.filename}`;
-        req.body.resume = `http://localhost:3000/shortCut/${req.file.filename}`;
-      } 
+      // Handle file uploads (both image and PDF)
+      if (req.files) {
+        if (req.files["img"]) {
+          req.body.path = `http://localhost:3000/uploads/${req.files["img"][0].filename}`;
+        }
+        if (req.files["pdf"]) {
+          req.body.resume = `http://localhost:3000/uploads/${req.files["pdf"][0].filename}`;
+        }
+      }
+
+      // If role is 'parent', validate the child's phone number
       if (role === "parent") {
-        // Verify if child exists by phone number
         const child = await Users.findOne({
           phone: childPhone,
           role: "student",
@@ -237,10 +267,13 @@ app.post(
         req.body.children = [child._id]; // Link parent to child
       }
 
+      // Create the new user
       const newUser = new Users(req.body);
       await newUser.save();
+
       res.json({ isAdded: true, message: "User added successfully" });
     } catch (error) {
+      console.error("Error signing up:", error);
       res
         .status(500)
         .json({ isAdded: false, message: "Error signing up", error });
@@ -371,14 +404,56 @@ app.post("/api/courses/search", (req, res) => {
   res.json({ T: courses });
 });
 
-//business Logics: add teachers
-app.post("/api/teacher", (req, res) => {
-  //instructon
-  console.log("here into BL:Add teacher", req.body);
-  let teacher = new Teacher(req.body);
-  teacher.save();
-  res.json({ isAdded: true });
+app.post("/api/teacher", async (req, res) => {
+  try {
+    console.log("Here into BL: Add teacher", req.body);
+
+    const {
+      firstName,
+      lastName,
+      age,
+      address,
+      email,
+      password,
+      speciality,
+      experience,
+    } = req.body;
+
+    // Check if the teacher with the same email already exists
+    const existingTeacher = await Teacher.findOne({ email });
+    if (existingTeacher) {
+      return res.json({ isAdded: false, message: "Email already exists" });
+    }
+
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create the new teacher object
+    const newTeacher = new Teacher({
+      firstName,
+      lastName,
+      age,
+      address,
+      email,
+      pwd: hashedPassword, // Store the hashed password
+      speciality,
+      experience,
+    });
+
+    // Save the teacher to the database
+    await newTeacher.save();
+
+    res
+      .status(201)
+      .json({ isAdded: true, message: "Teacher added successfully" });
+  } catch (error) {
+    console.error("Error adding teacher:", error);
+    res
+      .status(500)
+      .json({ isAdded: false, message: "Error adding teacher", error });
+  }
 });
+
 //business Logics: Edit teacher
 app.put("/api/teacher", (req, res) => {
   //instruction
@@ -452,78 +527,119 @@ app.get("/api/user/profil/:id", async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
-app.put("/api/user/profil/:id", async (req, res) => {
-  try {
-    const userId = req.params.id; // Récupérer l'ID depuis l'URL
-    const updateData = req.body; // Récupérer les nouvelles données utilisateur envoyées depuis le frontend
+app.put(
+  "/api/user/profil/:id",
+  multer({ storage: storageConfig }).fields([
+    { name: "img", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const updateData = req.body;
 
-    // Vérifiez si l'utilisateur est un enseignant (Teacher) ou un autre rôle
-    const user = await Users.findById(userId);
+      // Fetch the existing user
+      const user = await Users.findById(userId);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-    let updatedUser;
+      // Preserve previous values if no new files are uploaded
+      updateData.path = user.path; // Keep the old image if no new image
+      updateData.resume = user.resume; // Keep the old resume if no new PDF
 
-    // Mise à jour en fonction du rôle de l'utilisateur
-    if (user.role === "teacher") {
-      // Utilisez le modèle Teacher pour mettre à jour les champs spécifiques à un enseignant
-      updatedUser = await mongoose
-        .model("teacher")
-        .findByIdAndUpdate(
+      // Check for uploaded files and update only if new ones are present
+      if (req.files) {
+        if (req.files["img"]) {
+          updateData.path = `http://localhost:3000/uploads/${req.files["img"][0].filename}`;
+        }
+        if (req.files["pdf"]) {
+          updateData.resume = `http://localhost:3000/uploads/${req.files["pdf"][0].filename}`;
+        }
+      }
+
+      let updatedUser;
+
+      // Update based on the user role
+      if (user.role === "teacher") {
+        // Update Teacher specific fields
+        updatedUser = await mongoose
+          .model("teacher")
+          .findByIdAndUpdate(
+            userId,
+            {
+              firstName: updateData.firstName || user.firstName,
+              lastName: updateData.lastName || user.lastName,
+              age: updateData.age || user.age,
+              address: updateData.address || user.address,
+              phone: updateData.phone || user.phone,
+              path: updateData.path,
+              resume: updateData.resume,
+              speciality: updateData.speciality || user.speciality,
+              experience: updateData.experience || user.experience,
+            },
+            { new: true, runValidators: true }
+          )
+          .select("-password");
+      } else if (user.role === "student") {
+        // Update Student specific fields
+        updatedUser = await mongoose
+          .model("student")
+          .findByIdAndUpdate(
+            userId,
+            {
+              firstName: updateData.firstName || user.firstName,
+              lastName: updateData.lastName || user.lastName,
+              age: updateData.age || user.age,
+              address: updateData.address || user.address,
+              phone: updateData.phone || user.phone,
+            },
+            { new: true, runValidators: true }
+          )
+          .select("-password");
+      } else {
+        // Generic user update
+        updatedUser = await Users.findByIdAndUpdate(
           userId,
           {
-            firstName: updateData.firstName,
-            lastName: updateData.lastName,
-            age: updateData.age,
-            address: updateData.address,
-            phone: updateData.phone,
-            speciality: updateData.speciality, // Champ spécifique à Teacher
-            experience: updateData.experience, // Champ spécifique à Teacher
+            firstName: updateData.firstName || user.firstName,
+            lastName: updateData.lastName || user.lastName,
+            age: updateData.age || user.age,
+            address: updateData.address || user.address,
+            phone: updateData.phone || user.phone,
+            path: updateData.path,
+            resume: updateData.resume,
           },
           { new: true, runValidators: true }
-        )
-        .select("-password");
-    } else if (user.role === "student") {
-      // Utilisez le modèle Student pour mettre à jour les champs spécifiques à un étudiant
-      console.log("hhhhhhhhhh");
-      updatedUser = await mongoose
-        .model("student")
-        .findByIdAndUpdate(
-          userId,
-          {
-            firstName: updateData.firstName,
-            lastName: updateData.lastName,
-            age: updateData.age,
-            address: updateData.address,
-            phone: updateData.phone,
-          },
-          { new: true, runValidators: true }
-        )
-        .select("-password");
-    } else {
-      // Sinon, mettre à jour l'utilisateur générique
-      updatedUser = await Users.findByIdAndUpdate(userId, updateData, {
-        new: true,
-        runValidators: true,
-      }).select("-password");
-    }
+        ).select("-password");
+      }
 
-    // Renvoie l'utilisateur mis à jour
-    res.status(200).json({
-      message: "Profile updated successfully",
-      user: updatedUser,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+      // Send the updated user response
+      res.status(200).json({
+        message: "Profile updated successfully",
+        user: updatedUser,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
   }
-});
+);
 
 app.post("/api/students/", async (req, res) => {
   console.log("Here into BL: Add student", req.body);
   try {
-    const { firstName, lastName, age, address, grade, parentId } = req.body;
+    const { firstName, lastName, age, address, parentId, email, pwd } =
+      req.body;
+
+    // Check if the student email already exists
+    const existingStudent = await Student.findOne({ email });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    // Hash the password
+    const hashedPwd = await bcrypt.hash(pwd, 10);
 
     // Create the new student
     const newStudent = new Student({
@@ -531,7 +647,9 @@ app.post("/api/students/", async (req, res) => {
       lastName,
       age,
       address,
-      grade,
+
+      email,
+      pwd: hashedPwd,
     });
 
     await newStudent.save();
@@ -550,6 +668,7 @@ app.post("/api/students/", async (req, res) => {
     res.status(500).json({ message: "Error adding student", error });
   }
 });
+
 // Update a student
 app.put("/api/students/:_id", (req, res) => {
   console.log("here into BL:Edit student", req.body);
@@ -596,15 +715,36 @@ app.get("/api/students/:id", (req, res) => {
 app.post("/api/parents/", async (req, res) => {
   console.log("Here into BL: Add parent", req.body);
   try {
-    const newParent = new Parent(req.body);
+    const { email, password, firstName, lastName, address } = req.body;
+
+    // Check if parent with the email already exists
+    const existingParent = await Parent.findOne({ email });
+    if (existingParent) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+    // Hash password
+    const hashedPwd = await bcrypt.hash(password, 10);
+
+    // Create the new parent
+    const newParent = new Parent({
+      firstName,
+      lastName,
+      email,
+      address,
+      pwd: hashedPwd, // Save the hashed password
+    });
+
     await newParent.save();
     res
       .status(201)
       .json({ message: "Parent added successfully", parent: newParent });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error adding parent", error });
   }
 });
+
 // Update a parent
 app.put("/api/parents/:_id", (req, res) => {
   console.log("here into BL:Edit parent", req.body);
@@ -882,6 +1022,8 @@ app.put("/api/teacher/:id/validate", async (req, res) => {
   }
 });
 
-
+app.listen(3000, () => {
+  console.log(`Server running on port ${3000}`);
+});
 
 module.exports = app;

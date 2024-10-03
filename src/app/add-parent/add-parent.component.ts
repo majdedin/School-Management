@@ -12,6 +12,7 @@ export class AddParentComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
+    password:'',
     address: ''
   };
 

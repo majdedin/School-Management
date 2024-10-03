@@ -47,7 +47,7 @@ export class EnrollStudentComponent implements OnInit {
       this.studentsService.enrollStudent(this.studentId, this.selectedCourseId).subscribe(
         (response) => {
           console.log('Student enrolled in course', response);
-          //this.router.navigate(['/admin']); // Navigate back to students list
+          this.router.navigate(['/admin']); // Navigate back to students list
         },
         (error) => {
           console.error('Error enrolling student', error);

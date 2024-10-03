@@ -1,11 +1,15 @@
 <div class="container mt-5">
-    <h3>Parent Information</h3>
-    <p><strong>First Name:</strong> {{ parent?.firstName }}</p>
-    <p><strong>Last Name:</strong> {{ parent?.lastName }}</p>
-    <p><strong>Email:</strong> {{ parent?.email }}</p>
-    <p><strong>Address:</strong> {{ parent?.address }}</p>
+  <div class="text-center">
+      <!-- Display the parent's profile image -->
+      <img *ngIf="parent?.path" [src]="parent?.path" alt="Profile Image" class="img-fluid rounded-circle mb-3" style="max-width: 150px; max-height: 150px;">
+      
+    <h4>Name: {{parent?.firstName}} {{parent?.lastName}}</h4>
+    <p><strong>Age:</strong> {{parent?.age}}</p>
+    <p><strong>Address:</strong> {{parent?.address}}</p>
+    <p><strong>Email:</strong> {{parent?.email}}</p>
+    <p><strong>Password:</strong> ***** (Hidden for security)</p>
     
     <!-- Back Button -->
     <button class="btn btn-secondary mt-3" (click)="goBack()">Back</button>
   </div>
-  
+</div>

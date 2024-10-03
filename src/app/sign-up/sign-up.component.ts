@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
+  pdfPreview: string = '';
+
   test: boolean = false;
   actualPath: any;
   imagePreview: any;
@@ -50,22 +52,24 @@ export class SignUpComponent implements OnInit {
   }
 
   signUp(): void {
-    if (this.actualPath == '/inscription') {
+    // Set the role based on the path
+    if (this.actualPath === '/inscription') {
       this.signUpForm.value.role = 'student';
-    } else if (this.actualPath == '/inscriptionParent') {
+    } else if (this.actualPath === '/inscriptionParent') {
       this.signUpForm.value.role = 'parent';
-    } else if (this.actualPath == '/inscriptionTeacher') {
+    } else if (this.actualPath === '/inscriptionTeacher') {
       this.signUpForm.value.role = 'teacher';
     } else {
       this.signUpForm.value.role = 'admin';
     }
-
+  
+    // Call the sign-up service with form data and selected files
     this.userService.signUp(this.signUpForm.value, this.selectedFile, this.selectedResume).subscribe(
       (result: any) => {
         if (result.isAdded) {
           this.router.navigate(['Login']);
         } else {
-          this.errorMessage = result.message;  // Set the error message from backend
+          this.errorMessage = result.message;  // Display backend error message
         }
       },
       (error) => {
@@ -74,7 +78,7 @@ export class SignUpComponent implements OnInit {
       }
     );
   }
-
+  
   onImageSelected(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement && inputElement.files && inputElement.files.length > 0) {
@@ -92,26 +96,27 @@ export class SignUpComponent implements OnInit {
     
     if (fileInput.files && fileInput.files.length > 0) {
       const file = fileInput.files[0];
-      this.selectedResume=file
+      this.selectedResume = file; // Save the selected resume file
   
       // Ensure it's a PDF
       if (file.type === 'application/pdf') {
-        // Handle file uploading logic here, e.g., sending it to a server
+        // Handle file uploading logic or preview
         const reader = new FileReader();
         
         reader.onload = () => {
-          // Perform any actions you need with the file content
+          // You can display a preview or process the PDF file if needed
           console.log('PDF content:', reader.result);
-          // You can display a preview or take further actions based on the PDF content
+          // Optionally display a message or perform actions with the PDF data
         };
   
         reader.readAsArrayBuffer(file); // Read the PDF file
-  
       } else {
         console.error('Selected file is not a PDF.');
-        // Optionally, you could show a validation message
+        // Optionally, display an error message to the user
+        this.errorMessage = 'The selected file is not a valid PDF.';
       }
     }
   }
+  
   
 }

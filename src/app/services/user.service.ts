@@ -10,22 +10,32 @@ export class UserService {
   userProfilUrl: string = 'http://localhost:3000/api/user/profil';
   constructor(private http: HttpClient) { }
 
-  signUp(user: any , photo:File, resume:File) {
+  signUp(user: any, photo: File, resume: File) {
     let fData = new FormData();
-    fData.append("firstName",user.firstName);
-    fData.append("lastName",user.lastName);
-    fData.append("email",user.email);
-    fData.append("pwd",user.pwd);
-    fData.append("role",user.role);
-    fData.append("phone",user.phone);
-    if(user.role="parent"){
-      fData.append("childPhone",user.childPhone);
+    fData.append("firstName", user.firstName);
+    fData.append("lastName", user.lastName);
+    fData.append("email", user.email);
+    fData.append("pwd", user.pwd);
+    fData.append("role", user.role);
+    fData.append("phone", user.phone);
+    fData.append("age", user.age);
+    fData.append("address", user.address);
+    // Conditionally append childPhone if the user is a parent
+    if (user.role === "parent") {
+        fData.append("childPhone", user.childPhone);
     }
-    
-    fData.append("img",photo);
-    fData.append("pdf",resume);
+
+    // Append the image (photo) and resume (pdf)
+    if (photo) {
+        fData.append("img", photo);
+    }
+    if (resume) {
+        fData.append("pdf", resume);
+    }
+
+    // Send POST request with form data
     return this.http.post<{ isAdded: boolean }>(this.userUrl + '/signUp', fData);
-  }
+}
 
   logIn(user: any) {
     return this.http.post<{msg: string; user: any}>(this.userUrl + '/login', user);

@@ -10,6 +10,12 @@
       <p><strong>Address:</strong> {{teacher?.address}}</p>
       <p><strong>Speciality:</strong> {{teacher?.speciality}}</p>
       <p><strong>Experience:</strong> {{teacher?.experience}} years</p>
+      <p><strong>Resume: </strong>
+        <a *ngIf="teacher?.resume" [href]="teacher.resume" target="_blank" class="btn btn-info">
+          Download CV
+        </a>
+        <span *ngIf="!teacher?.resume">No CV uploaded</span>
+      </p>
     </div>
     <button class="btn btn-secondary mt-3" (click)="goBack()">Back</button>
 

@@ -7,7 +7,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Age</th>
-            <th>Grade</th>
+            <th>Email</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -16,8 +16,9 @@
             <td>{{ student.firstName }}</td>
             <td>{{ student.lastName }}</td>
             <td>{{ student.age }}</td>
-            <td>{{ student.grade }}</td>
+            <td>{{ student.email }}</td>
             <td>
+              <button class="btn btn-info" (click)="display(student._id)">Display</button>
               <button class="btn btn-info" (click)="editStudent(student._id)">Edit</button>
               <button class="btn btn-danger" (click)="deleteStudent(student._id)">Delete</button>
               <button class="btn btn-success" (click)="enroll(student._id)">Enroll in Course</button>

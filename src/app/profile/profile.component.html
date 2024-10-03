@@ -6,6 +6,10 @@
       <h4 class="card-title">User Information</h4>
 
       <!-- Display mode -->
+        <!-- Display Profile Picture -->
+      <div class="text-center mb-3">
+        <img *ngIf="user?.path" [src]="user?.path" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+      </div>
       <form [formGroup]="profileForm" *ngIf="!editMode">
         <p><strong>First Name: </strong>{{ user?.firstName }}</p>
         <p><strong>Last Name: </strong>{{ user?.lastName }}</p>
@@ -14,11 +18,21 @@
         <p><strong>Role: </strong>{{ user?.role }}</p>
         <p><strong>Age: </strong>{{ user?.age }}</p>
         <p><strong>Address: </strong>{{ user?.address }}</p>
+        
 
         <!-- Display role-specific fields -->
-        <div *ngIf="role === 'Teacher'">
+        <div *ngIf="role === 'teacher'">
           <p><strong>Speciality: </strong>{{ user?.speciality }}</p>
           <p><strong>Experience: </strong>{{ user?.experience }} years</p>
+        </div>
+        <!-- Teacher's CV -->
+        <div *ngIf="role === 'teacher'">
+          <p><strong>Resume: </strong>
+            <a *ngIf="user?.resume" [href]="user.resume" target="_blank" class="btn btn-info">
+              Download CV
+            </a>
+            <span *ngIf="!user?.resume">No CV uploaded</span>
+          </p>
         </div>
 
         <div *ngIf="role === 'Student'">
@@ -75,13 +89,21 @@
               <option value="project management">Project Management</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="resume">Upload New CV:</label>
+            <input type="file" (change)="onResumeSelected($event)" accept=".pdf" class="form-control" />
+          </div>
 
           <div class="form-group">
             <label for="experience">Experience (in years):</label>
             <input formControlName="experience" class="form-control" type="number" />
           </div>
         </div>
-
+ <!-- Profile Picture Upload -->
+ <div class="form-group">
+  <label for="profilePicture">Profile Picture:</label>
+  <input type="file" (change)="onImageSelected($event)" class="form-control" />
+</div>
         <!-- Role-specific fields for Student -->
         <div *ngIf="role === 'student'">
           <p>Student can't modify courses directly.</p>

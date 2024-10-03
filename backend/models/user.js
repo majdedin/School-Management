@@ -1,5 +1,7 @@
 // import mongoose module
 const mongoose = require("mongoose");
+const defimg = "http://localhost:3000/uploads/profil1.png";
+
 //create cours schema
 const usersSchema = mongoose.Schema(
   {
@@ -11,7 +13,10 @@ const usersSchema = mongoose.Schema(
     pwd: String,
     confirmPassword: String,
     role: String,
-    path: String,
+    path: {
+      type: String,
+      default: defimg,
+    },
     phone: { type: String },
   },
   { discriminatorKey: "role", timestamps: true }

@@ -20,6 +20,14 @@
           <input type="text" [(ngModel)]="teacher.address" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Address" required>
         </div>
         <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" [(ngModel)]="teacher.email" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" [(ngModel)]="teacher.password" [ngModelOptions]="{standalone:true}" class="form-control" placeholder="Password" required>
+        </div>
+        <div class="form-group">
           <label for="speciality">Speciality</label>
           <select [(ngModel)]="teacher.speciality" [ngModelOptions]="{standalone:true}" class="form-control" required>
             <option *ngFor="let speciality of specialities" [value]="speciality">{{ speciality }}</option>
@@ -34,7 +42,6 @@
         </div>
       </form>
       <button class="btn btn-secondary mt-3" (click)="goBack()">Back</button>
-
     </div>
   </div>
 </div>
