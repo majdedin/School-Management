@@ -33,6 +33,7 @@ export class DashboardParentComponent implements OnInit {
             return {
               course,
               grade: gradeObj ? gradeObj.grade : 'No grade yet',
+               evaluation: gradeObj ? gradeObj.evaluation : "No evoled yet"
             };
           });
   
@@ -57,6 +58,12 @@ export class DashboardParentComponent implements OnInit {
     (g: any) => g.course._id === course._id
   );
   return gradeObj ? gradeObj.grade : 'No grade yet';
+}
+getEvaliation(child: any, course: any): string {
+  const gradeObj = child.grades.find(
+    (g: any) => g.course._id === course._id
+  );
+  return gradeObj ? gradeObj.evaluation : 'No evoled yet';
 }
 viewTeacher(id: any): void {
  console.log(id)

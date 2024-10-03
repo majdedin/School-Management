@@ -23,7 +23,28 @@ export class HeaderComponent implements OnInit {
     }
     return !!token; // Retourne true si le token existe
   }
+  dashbord(){
+    
+    if (this.user.role == "admin") {
+      this.router.navigate(['admin'])
+    } else if 
+       (this.user.role == "teacher") {
+        this.router.navigate(['teacher'])
+      
+    }else if 
+    (this.user.role == "student") {
+     this.router.navigate(['student'])
+   
+ }else if 
+ (this.user.role == "parent") {
+  this.router.navigate(['parent'])
+
+}
+    else {
+      this.router.navigate([''])
+    }
   
+  }
 
   logout() {
     sessionStorage.removeItem('jwt');

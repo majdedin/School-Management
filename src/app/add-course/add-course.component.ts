@@ -32,7 +32,7 @@ export class AddCourseComponent implements OnInit {
     this.coursesService.addcourse(this.course).subscribe(
       (response) => {
         console.log('Course added successfully', response);
-        this.router.navigate(['/courses']); // Navigate back to courses tab after adding
+        this.router.navigate(['/admin']); // Navigate back to courses tab after adding
       },
       (error) => {
         console.error('Error adding course', error);

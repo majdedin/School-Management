@@ -96,8 +96,12 @@
                     <div class="form-group">
                         <input style="visibility: hidden;" type="file" #filePicker (change)="onIPdfSelected($event)" />
                     </div>
-                    <button type="submit" (click)="signUp()" [disabled]="signUpForm.invalid" class="btn btn-secondary">SignUp</button>
                 </div>
+                <div style="text-align: center;">
+                    <button  type="submit" (click)="signUp()" [disabled]="signUpForm.invalid" class="btn btn-secondary">SignUp</button>
+
+                </div>
+
             </form>
         </div>
         <div class="col-lg-6 text-center text-lg-right">
