@@ -1021,6 +1021,46 @@ app.put("/api/teacher/:id/validate", async (req, res) => {
     res.status(500).json({ message: "Error validating teacher", error });
   }
 });
+app.get("/api/parents/child/:phone", async (req, res) => {
+  try {
+    const phone = req.params.phone;
+
+    // Find the child by phone number, populate course details in grades
+    const child = await Users.findOne({ phone, role: "student" })
+      .populate({
+        path: "grades.course", // Populate course within grades
+      })
+      .populate({
+        path: "courses", // Populate course within grades
+      });
+
+    if (!child) {
+      return res.status(404).json({ message: "Child not found" });
+    }
+
+    // Return the child details and their courses
+    res.status(200).json({ child });
+  } catch (error) {
+    console.error("Error fetching child:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+// Get all courses with teacher information
+app.get("/api/courses-with-teachers", async (req, res) => {
+  try {
+    // Fetch all courses and populate the teacher field
+    const courses = await Course.find().populate("teacher");
+
+    if (!courses) {
+      return res.status(404).json({ message: "No courses found" });
+    }
+
+    res.status(200).json({ courses });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
 
 app.listen(3000, () => {
   console.log(`Server running on port ${3000}`);

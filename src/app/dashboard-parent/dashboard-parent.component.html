@@ -1,36 +1,77 @@
-<div class="container">
+<div class="container parent-dashboard">
   <h2 class="text-center">Parent Dashboard</h2>
 
-  <div *ngFor="let child of children" class="card my-3">
-    <div class="card-header">
-      <h4>{{ child.firstName }} {{ child.lastName }}</h4>
-    </div>
-    <div class="card-body">
-      <h5>Courses Enrolled:</h5>
-      <table class="table table-bordered">
-        <thead class="thead-dark">
-          <tr>
-            <th>Course Title</th>
-            <th>Description</th>
-            <th>Duration</th>
-            <th>Grade</th>
-            <th>Evaluation</th>
-            <th>Teacher</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let course of child.courses">
-            <td>{{ course.title }}</td>
-            <td>{{ course.description }}</td>
-            <td>{{ course.duration }} hours</td>
-            <td>{{ getGrade(child, course) }}</td>
-            <td>{{ getEvaliation(child, course) }}</td>
-            <td>
-              <button class="btn btn-info" (click)="viewTeacher(course.teacher)">View Teacher</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Input field for child's phone number -->
+  <div class="search-section">
+    <label for="childPhone">Enter your child's phone number:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="childPhone"
+      [(ngModel)]="childPhone"
+      placeholder="Enter child's phone number"
+    />
+    <button class="btn btn-primary mt-2" (click)="searchChild()">Search</button>
   </div>
+
+  <!-- Display child information and courses if found -->
+  <div *ngIf="selectedChild" class="child-info-section">
+    <h3>{{ selectedChild.firstName }} {{ selectedChild.lastName }}</h3>
+
+    <h5>Courses Enrolled:</h5>
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Course Title</th>
+          <th>Description</th>
+          <th>Duration</th>
+          <th>Grade</th>
+          <th>Evaluation</th>
+          <th>Teacher</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of selectedChild.courses">
+          <td>{{ course.title }}</td>
+          <td>{{ course.description }}</td>
+          <td>{{ course.duration }} hours</td>
+          <td>{{ getGrade(selectedChild, course) }}</td>
+          <td>{{ getEvaluation(selectedChild, course) }}</td>
+          <td>
+            <button class="btn btn-info" (click)="viewTeacher(course.teacher)">
+              View Teacher
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Available Courses and Teachers -->
+  <div class="available-courses-section mt-5">
+    <h4>Available Courses and Teachers on Platform:</h4>
+    <table class="table table-striped table-hover">
+      <thead class="thead-light">
+        <tr>
+          <th>Course Title</th>
+          <th>Description</th>
+          <th>Duration</th>
+          <th>Teacher Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of teachersCourses">
+          <td>{{ course.title }}</td>
+          <td>{{ course.description }}</td>
+          <td>{{ course.duration }} hours</td>
+          <td>{{ course.teacher.firstName }} {{ course.teacher.lastName }} <button class="btn btn-info" (click)="viewTeacher(course.teacher._id)">
+            View Teacher
+          </button> </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Display error message if child not found -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
 </div>

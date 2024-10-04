@@ -37,4 +37,11 @@ export class ParentsService {
   getChildrenForParent(parentId: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${parentId}/children`);
   }
+  getChildByPhone(phone: string): Observable<any> {
+    return this.http.get<{ child: any }>(`${this.baseUrl}/child/${phone}`);
+  }
+  getCoursesWithTeachers(): Observable<any> {
+    return this.http.get('http://localhost:3000/api/courses-with-teachers');
+  }
+  
 }

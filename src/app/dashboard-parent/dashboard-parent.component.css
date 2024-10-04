@@ -1,0 +1,58 @@
+.container {
+    margin-top: 20px;
+  }
+  
+  .text-center {
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  .search-section {
+    margin-bottom: 30px;
+  }
+  
+  .child-info-section {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .child-info-section h3 {
+    font-family: 'Cursive', sans-serif;
+    color: #34495e;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  
+  .table thead {
+    background-color: #34495e;
+    color: white;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .available-courses-section {
+    margin-top: 30px;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .btn-info {
+    background-color: #3498db;
+    border-color: #3498db;
+    color: white;
+  }
+  
+  .alert-danger {
+    color: #e74c3c;
+    background-color: #f9e2e2;
+    border-color: #f5c6cb;
+  }
+  

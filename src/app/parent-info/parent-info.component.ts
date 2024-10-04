@@ -17,7 +17,7 @@ export class ParentInfoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("hiiiggggggggggggggggggggggggggggggi")
+    
     const parentId = this.route.snapshot.paramMap.get('id');
     this.parentService.getParentById(parentId).subscribe((data) => {
    
